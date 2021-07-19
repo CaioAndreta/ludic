@@ -58,7 +58,7 @@ class AuthController {
 
   static userLogin(BuildContext context, String email, String senha) async {
     try {
-      UserModel savedUser = await getSavedUser();
+      // UserModel savedUser = await getSavedUser();
       await auth.signInWithEmailAndPassword(email: email, password: senha);
       Navigator.of(context).pushReplacementNamed('/home');
     } on FirebaseAuthException catch (e, s) {
@@ -66,23 +66,23 @@ class AuthController {
     }
   }
 
-  static void setUser(BuildContext context, UserModel? user) {
-    if (user != null) {
-      // saveUser(user);
-      _user = user;
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      Navigator.pushReplacementNamed(context, '/login');
-    }
-  }
-}
+//   static void setUser(BuildContext context, UserModel? user) {
+//     if (user != null) {
+//       // saveUser(user);
+//       _user = user;
+//       Navigator.pushReplacementNamed(context, '/home');
+//     } else {
+//       Navigator.pushReplacementNamed(context, '/login');
+//     }
+//   }
+// }
 
-Future<UserModel> getSavedUser() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String jsonUser = prefs.getString('saved_user') as String;
-  print(jsonUser);
+// Future<UserModel> getSavedUser() async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   String jsonUser = prefs.getString('saved_user') as String;
+//   print(jsonUser);
 
-  Map<String, dynamic> mapUser = json.decode(jsonUser);
-  UserModel user = UserModel.fromJson(mapUser);
-  return user;
+//   Map<String, dynamic> mapUser = json.decode(jsonUser);
+//   UserModel user = UserModel.fromJson(mapUser);
+//   return user;
 }

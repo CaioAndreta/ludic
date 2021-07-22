@@ -11,15 +11,12 @@ class AuthController {
 
   get user => _user!;
 
-  static void doSignUp(String name, email, password) {
-    _saveUser(UserModel user) async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('saved_user', json.encode(user.toJson()));
-    }
-
+  static void doSignUp(String name, email, password) async {
     UserModel user = UserModel(name: name, email: email);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('email', email);
+    preferences.setString('nome', name);
     auth.createUserWithEmailAndPassword(email: email, password: password);
-    _saveUser(user);
   }
 
   static showPopUp(BuildContext context, String msg) {
@@ -56,10 +53,11 @@ class AuthController {
     }
   }
 
-  static userLogin(BuildContext context, String email, String senha) async {
+  static userLogin(BuildContext context, String email, String senha,) async {
     try {
-      // UserModel savedUser = await getSavedUser();
       await auth.signInWithEmailAndPassword(email: email, password: senha);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString('email', email);
       Navigator.of(context).pushReplacementNamed('/home');
     } on FirebaseAuthException catch (e, s) {
       captureErrors(context, e, s);

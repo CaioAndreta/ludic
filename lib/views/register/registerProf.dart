@@ -32,12 +32,12 @@ class RegisterProfView extends StatelessWidget {
               Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Text('REGISTRAR NOVO PROFESSOR',
-                      style: TextStyles.title1)),
+                      style: TextStyles.purpleTitleText)),
               InputField(
                   controller: _nameController,
                   decoration: InputDecoration(
                     labelText: 'Nome',
-                    labelStyle: TextStyles.hintText,
+                    labelStyle: TextStyles.purpleHintText,
                     icon: Icon(
                       Icons.person,
                       color: AppColors.primary,
@@ -48,7 +48,7 @@ class RegisterProfView extends StatelessWidget {
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: TextStyles.hintText,
+                    labelStyle: TextStyles.purpleHintText,
                     icon: Icon(
                       Icons.mail,
                       color: AppColors.primary,
@@ -60,7 +60,7 @@ class RegisterProfView extends StatelessWidget {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Senha',
-                    labelStyle: TextStyles.hintText,
+                    labelStyle: TextStyles.purpleHintText,
                     icon: Icon(
                       Icons.lock,
                       color: AppColors.primary,
@@ -70,7 +70,8 @@ class RegisterProfView extends StatelessWidget {
               Button(
                   label: 'Registrar',
                   onPressed: () {
-                    AuthController.doSignUp(_nameController.text, _emailController.text, _passwordController.text);
+                    AuthController.doSignUp(_nameController.text,
+                        _emailController.text, _passwordController.text);
                   }),
             ],
           ),

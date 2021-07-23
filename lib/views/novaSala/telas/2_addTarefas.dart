@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:short_uuids/short_uuids.dart';
 import 'package:intl/intl.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
@@ -14,7 +13,15 @@ class AddTarefasView extends StatefulWidget {
 }
 
 class _AddTarefasViewState extends State<AddTarefasView> {
-  static const uuid = ShortUuid();
+  addTar() {
+    addTarefa({
+      'nome': 'nome 1',
+      'descricao': 'Lorem Ipsum ',
+      'data': DateFormat('dd/MM/yyyy').format(DateTime.now())
+    });
+    setState(() {});
+  }
+
   var trabs = [
     {
       'nome': 'nome 1',
@@ -32,6 +39,7 @@ class _AddTarefasViewState extends State<AddTarefasView> {
     trabs.remove(trabs[index]);
     setState(() {});
   }
+
   final novaSalaController = NovaSalaController();
   @override
   Widget build(BuildContext context) {
@@ -47,13 +55,7 @@ class _AddTarefasViewState extends State<AddTarefasView> {
           primary: AppColors.background,
         ),
         onPressed: () {
-          addTarefa({
-            'nome': 'nome 1',
-            'descricao':
-                'Loremi Loremi Loremi Loremi Loremi Loremi Loremi Loremi Loremi Loremi Loremi Loremi Loremi Loremi Loremi ',
-            'data': DateFormat('dd/MM/yyyy').format(DateTime.now())
-          });
-          setState(() {});
+          addTar();
         },
       ),
       body: Container(
@@ -77,11 +79,10 @@ class _AddTarefasViewState extends State<AddTarefasView> {
                 shrinkWrap: true,
                 itemCount: trabs.length,
                 itemBuilder: (_, index) {
-                  return Stack(
+                  return Column(
                     children: [
                       Card(
                         child: Container(
-                          height: size.height * 0.15,
                           width: size.width,
                           color: Colors.white,
                           child: Column(
@@ -93,40 +94,40 @@ class _AddTarefasViewState extends State<AddTarefasView> {
                                     style: TextStyles.cardTitle),
                               ),
                               Padding(
-                                padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                                child: Text(trabs[index]['uuid'].toString(),
+                                padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
+                                child: Text(
+                                    trabs[index]['descricao'].toString(),
                                     style: TextStyles.cardDesc),
                               ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: PopupMenuButton(
+                                  itemBuilder: (_) => [
+                                    PopupMenuItem(
+                                        child: ListTile(
+                                            leading: Icon(Icons.edit),
+                                            title: Text('Editar'))),
+                                    PopupMenuItem(
+                                        child: ListTile(
+                                            onTap: () => deleteTarefa(index),
+                                            leading: Icon(Icons.delete,
+                                                color: AppColors.delete),
+                                            title: Text('Apagar',
+                                                style: TextStyle(
+                                                    color: AppColors.delete)))),
+                                  ],
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.all(7),
+                                  child: Text(trabs[index]['data'].toString(),
+                                      style: TextStyles.cardDate),
+                                ),
+                              )
                             ],
                           ),
-                        ),
-                      ),
-                      Positioned(
-                          top: 0,
-                          right: 0,
-                          child: PopupMenuButton(
-                            itemBuilder: (_) => [
-                              PopupMenuItem(
-                                  child: ListTile(
-                                      leading: Icon(Icons.edit),
-                                      title: Text('Editar'))),
-                              PopupMenuItem(
-                                  child: ListTile(
-                                      onTap: () => deleteTarefa(index),
-                                      leading: Icon(Icons.delete,
-                                          color: AppColors.delete),
-                                      title: Text('Apagar',
-                                          style: TextStyle(
-                                              color: AppColors.delete)))),
-                            ],
-                          )),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        child: Padding(
-                          padding: EdgeInsets.all(7),
-                          child: Text(trabs[index]['data'].toString(),
-                              style: TextStyles.cardDate),
                         ),
                       ),
                     ],

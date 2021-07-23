@@ -19,7 +19,6 @@ class _NomeSalaViewState extends State<NomeSalaView> {
         height: size.height,
         width: size.width,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(height: size.height * 0.15),
@@ -32,8 +31,7 @@ class _NomeSalaViewState extends State<NomeSalaView> {
                     cursorColor: AppColors.background,
                     decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: AppColors.background),
+                          borderSide: BorderSide(color: AppColors.background),
                         ),
                         enabledBorder: UnderlineInputBorder(
                             borderSide:

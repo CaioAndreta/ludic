@@ -46,20 +46,26 @@ class _HomePageState extends State<HomePage> {
               SharedPreferences preferences =
                   await SharedPreferences.getInstance();
               preferences.remove('email');
-              preferences.remove('name');
             },
           ),
         ),
-        appBar: AppBar(
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/nova-sala');
-              },
-              icon: Icon(Icons.add),
-            )
-          ],
-        ),
+        appBar: AppBar(actions: [
+          PopupMenuButton(
+            icon: Icon(Icons.add),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                  child: ListTile(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed('/nova-sala');
+                      },
+                      title: Text('Criar uma Sala de Aula'))),
+              PopupMenuItem(
+                  child: ListTile(
+                      onTap: () {}, title: Text('Entrar em uma Sala de Aula')))
+            ],
+          )
+        ]),
         body: StreamBuilder<QuerySnapshot>(
             stream: _firestore.collection('salas').orderBy('nome').snapshots(),
             builder: (_, snapshot) {

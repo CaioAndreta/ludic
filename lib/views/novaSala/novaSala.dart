@@ -14,6 +14,7 @@ class NovaSalaView extends StatefulWidget {
 }
 
 class _NovaSalaViewState extends State<NovaSalaView> {
+  int index = 0;
   var novaSalaController = NovaSalaController();
   final pages = [NomeSalaView(), AddTarefasView(), CodigoSalaView()];
   @override
@@ -24,29 +25,42 @@ class _NovaSalaViewState extends State<NovaSalaView> {
         appBar: AppBar(
           iconTheme: IconThemeData(color: AppColors.background),
         ),
-        body: pages[novaSalaController.currentPage],
-        bottomNavigationBar: Container(
-          width: size.width * 0.8,
-          decoration: BoxDecoration(
-            color: AppColors.background,
-            borderRadius: BorderRadius.circular(29),
+        body: IndexedStack(
+          children: [NomeSalaView(), AddTarefasView(), CodigoSalaView()],
+          index: index,
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(29),
+            ),
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: TextButton(
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                    primary: AppColors.primary),
+                child: Text(
+                  'Continuar',
+                  style: TextStyle(color: AppColors.primary),
+                ),
+                onPressed: () {
+                  if (index < 2) {
+                    index += 1;
+                  } else {
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(SnackBar(
+                        content: Text('Cadastro efetuado com sucesso!'),
+                      ));
+                  }
+                  setState(() {});
+                }),
           ),
-          margin: EdgeInsets.symmetric(vertical: 10),
-          child: TextButton(
-              style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                  primary: AppColors.primary),
-              child: Text(
-                'Continuar',
-                style: TextStyle(color: AppColors.primary),
-              ),
-              onPressed: () {
-                novaSalaController.setPage(1);
-                setState(() {});
-              }),
         ));
   }
 }

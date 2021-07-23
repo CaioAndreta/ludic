@@ -7,8 +7,12 @@ class TextStyles {
       fontSize: 24, color: AppColors.primary, fontWeight: FontWeight.bold);
   static final whiteTitleText = GoogleFonts.roboto(
       fontSize: 18, color: AppColors.background, fontWeight: FontWeight.bold);
+  static final purpleCodigoSala = GoogleFonts.roboto(
+      fontSize: 20, color: AppColors.primary, fontWeight: FontWeight.bold);
   static final purpleHintText = GoogleFonts.roboto(color: AppColors.primary);
   static final whiteHintText = GoogleFonts.roboto(color: AppColors.background);
+  static final whitetxtCodigoSala =
+      GoogleFonts.roboto(color: AppColors.background, fontSize: 24);
   static final cardTitle =
       GoogleFonts.roboto(color: AppColors.black, fontSize: 18);
   static final cardDate =

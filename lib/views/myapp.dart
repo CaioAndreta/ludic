@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
               centerTitle: true,
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
-              titleTextStyle: TextStyle(color: Colors.purple.shade900),
-              iconTheme: IconThemeData(color: Colors.purple.shade900),
+              titleTextStyle: TextStyle(color: AppColors.primary),
+              iconTheme: IconThemeData(color: AppColors.primary),
             )),
         initialRoute: email == null ? '/' : '/home',
         routes: {

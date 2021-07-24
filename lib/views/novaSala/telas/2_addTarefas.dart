@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:ludic/shared/widgets/InputFieldBorderless.dart';
+import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/input_field.dart';
 import 'package:ludic/views/novaSala/novaSalaController.dart';
 
@@ -15,38 +14,27 @@ class AddTarefasView extends StatefulWidget {
 }
 
 class _AddTarefasViewState extends State<AddTarefasView> {
-  addTar() {
-    addTarefa({
-      'nome': 'nome 1',
-      'descricao': 'Lorem Ipsum ',
-      'data': DateFormat('dd/MM/yyyy').format(DateTime.now())
+  final novaSalaController = NovaSalaController();
+  var selectedDate = DateTime.now();
+  List tarefas = [];
+  addTarefa(String name, String desc) {
+    tarefas.add({
+      'nome': name,
+      'descricao': desc,
     });
     setState(() {});
   }
 
-  var trabs = [
-    {
-      'nome': 'nome 1',
-      'descricao': 'descricao',
-      'data': DateFormat("dd/MM/yyyy").format(DateTime.now()),
-      'uuid': UniqueKey()
-    },
-  ];
-  addTarefa(var map) {
-    trabs.add(map);
-    setState(() {});
-  }
-
   deleteTarefa(int index) {
-    trabs.remove(trabs[index]);
+    tarefas.remove(tarefas[index]);
     setState(() {});
   }
 
-  final novaSalaController = NovaSalaController();
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    TextEditingController _nameController = TextEditingController();
+    TextEditingController _descController = TextEditingController();
     return Scaffold(
       backgroundColor: AppColors.primary,
       floatingActionButton: ElevatedButton(
@@ -64,65 +52,105 @@ class _AddTarefasViewState extends State<AddTarefasView> {
               builder: (context) => Container(
                     height: size.height * 0.8,
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.secondary,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(25.0),
                             topRight: Radius.circular(25.0))),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: Text('Insira as informações da tarefa',
-                              style: TextStyles.blackHintText),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Text('Insira as informações da tarefa',
+                                  style: TextStyles.blackTitleText),
+                            ),
+                            InputField(
+                                controller: _nameController,
+                                height: 70,
+                                decoration: InputDecoration(
+                                    labelText: 'Nome',
+                                    labelStyle: TextStyles.primaryHintText,
+                                    border: InputBorder.none)),
+                            // InputField(
+                            //     controller: _pesoController,
+                            //     height: 70,
+                            //     decoration: InputDecoration(
+                            //         labelText: 'Peso',
+                            //         labelStyle: TextStyles.primaryHintText,
+                            //         border: InputBorder.none)),
+                            InputField(
+                                controller: _descController,
+                                height: 120,
+                                decoration: InputDecoration(
+                                    labelText: 'Descrição',
+                                    labelStyle: TextStyles.primaryHintText,
+                                    border: InputBorder.none)),
+                          ],
                         ),
-                        InputFieldBorderless(label: 'Nome'),
-                        InputFieldBorderless(label: 'Descrição'),
+                        Button(
+                          label: 'Adicionar',
+                          onPressed: () {
+                            addTarefa(
+                                _nameController.text, _descController.text);
+                            Navigator.pop(context);
+                          },
+                        )
                       ],
                     ),
                   ));
         },
       ),
-      body: Container(
-        height: size.height,
-        width: size.width,
-        child: ListView(
-          children: [
-            Container(
-              height: size.height * 0.1,
-              child: Center(
-                child: Text(
-                  'Adicione o seu planejamento de tarefas',
-                  style: TextStyles.whiteTitleText,
-                ),
+      body: ListView(
+        children: [
+          Container(
+            height: size.height * 0.1,
+            child: Center(
+              child: Text(
+                'Adicione o seu planejamento de tarefas',
+                style: TextStyles.secondaryTitleText,
               ),
             ),
-            SingleChildScrollView(
-              child: ListView.builder(
+          ),
+          SingleChildScrollView(
+            child: ListView.builder(
                 physics: ScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: trabs.length,
+                itemCount: tarefas.length,
                 itemBuilder: (_, index) {
                   return Column(
                     children: [
                       Card(
                         child: Container(
                           width: size.width,
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          height: 100,
+                          color: AppColors.secondary,
+                          child: Row(
                             children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                                child: Text(trabs[index]['nome'].toString(),
-                                    style: TextStyles.cardTitle),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 10, 0, 0),
+                                      child: Text(
+                                          tarefas[index]['nome'].toString(),
+                                          style: TextStyles.cardTitle),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(10, 15, 0, 0),
+                                    child: Text(
+                                        tarefas[index]['descricao'].toString(),
+                                        style: TextStyles.cardDesc),
+                                  )
+                                ],
                               ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
-                                child: Text(
-                                    trabs[index]['descricao'].toString(),
-                                    style: TextStyles.cardDesc),
-                              ),
+                              Expanded(child: Container()),
                               Align(
                                 alignment: Alignment.topRight,
                                 child: PopupMenuButton(
@@ -142,25 +170,15 @@ class _AddTarefasViewState extends State<AddTarefasView> {
                                   ],
                                 ),
                               ),
-                              Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Padding(
-                                  padding: EdgeInsets.all(7),
-                                  child: Text(trabs[index]['data'].toString(),
-                                      style: TextStyles.cardDate),
-                                ),
-                              )
                             ],
                           ),
                         ),
                       ),
                     ],
                   );
-                },
-              ),
-            ),
-          ],
-        ),
+                }),
+          ),
+        ],
       ),
     );
   }

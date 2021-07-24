@@ -31,26 +31,36 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     final _firestore = FirebaseFirestore.instance;
     return Scaffold(
+        backgroundColor: AppColors.secondary,
         key: scaffoldKey,
         drawerEnableOpenDragGesture: true,
         drawer: Drawer(
-          child: ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Sair'),
-            onTap: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/', (route) => false);
-              SharedPreferences preferences =
-                  await SharedPreferences.getInstance();
-              preferences.remove('email');
-            },
+          child: Container(
+            color: AppColors.secondary,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: Icon(Icons.exit_to_app),
+                  title: Text('Sair'),
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/', (route) => false);
+                    SharedPreferences preferences =
+                        await SharedPreferences.getInstance();
+                    preferences.remove('email');
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         appBar: AppBar(actions: [
           PopupMenuButton(
+            color: AppColors.secondary,
             icon: Icon(Icons.add),
             itemBuilder: (_) => [
               PopupMenuItem(
@@ -59,10 +69,13 @@ class _HomePageState extends State<HomePage> {
                         Navigator.of(context)
                             .pushReplacementNamed('/nova-sala');
                       },
-                      title: Text('Criar uma Sala de Aula'))),
+                      title: Text('Criar uma Sala de Aula',
+                          style: TextStyles.primaryHintText))),
               PopupMenuItem(
                   child: ListTile(
-                      onTap: () {}, title: Text('Entrar em uma Sala de Aula')))
+                      onTap: () {},
+                      title: Text('Entrar em uma Sala de Aula',
+                          style: TextStyles.primaryHintText)))
             ],
           )
         ]),
@@ -71,8 +84,8 @@ class _HomePageState extends State<HomePage> {
             builder: (_, snapshot) {
               if (!snapshot.hasData) {
                 return Center(
-                    heightFactor: double.infinity,
-                    widthFactor: double.infinity,
+                    heightFactor: size.height,
+                    widthFactor: size.width,
                     child: CircularProgressIndicator(color: AppColors.primary));
               }
               return ListView.builder(
@@ -80,14 +93,16 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (_, index) {
                     var doc = snapshot.data!.docs[index];
                     return Container(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      height: 220,
+                      padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
+                      height: 300,
+                      color: AppColors.secondary,
                       width: double.infinity,
                       child: GestureDetector(
                         onTap: () {},
                         child: Card(
-                          elevation: 5,
+                          elevation: 8,
                           child: Container(
+                            color: AppColors.secondary,
                             height: double.infinity,
                             width: double.infinity,
                             child: Column(
@@ -100,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       Center(
                                         child: Text(doc['nome'],
-                                            style: TextStyles.purpleHintText),
+                                            style: TextStyles.primaryHintText),
                                       ),
                                     ],
                                   ),

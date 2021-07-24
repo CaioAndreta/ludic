@@ -14,7 +14,7 @@ class SplashPage extends StatelessWidget {
       body: Stack(
         children: [
           Center(child: Container(color: AppColors.primary,)),
-          Center(child: Text('LUDIC', style: TextStyles.purpleTitleText,))
+          Center(child: Text('LUDIC', style: TextStyles.primaryTitleText,))
         ],
       ),
     );

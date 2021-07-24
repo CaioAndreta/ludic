@@ -30,7 +30,7 @@ class _NovaSalaViewState extends State<NovaSalaView> {
           index: index,
         ),
         bottomNavigationBar: Padding(
-          padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.secondary,

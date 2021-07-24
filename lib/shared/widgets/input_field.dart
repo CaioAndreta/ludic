@@ -4,12 +4,14 @@ import 'package:ludic/shared/themes/app_colors.dart';
 // ignore: must_be_immutable
 class InputField extends StatefulWidget {
   InputDecoration? decoration;
+  double height;
   TextEditingController? controller;
   bool obscureText;
   var validator;
   InputField(
       {Key? key,
       this.decoration,
+      required this.height,
       this.obscureText = false,
       this.controller,
       this.validator})
@@ -26,13 +28,15 @@ class _InputFieldState extends State<InputField> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      height: 70,
+      height: widget.height,
       width: size.width * 0.8,
       decoration: BoxDecoration(
-          color: AppColors.shape,
+          color: AppColors.secondary,
           borderRadius: BorderRadius.circular(29),
           border: Border.all(color: AppColors.primary)),
       child: TextFormField(
+        maxLines: 3,
+        keyboardType: TextInputType.multiline,
         controller: widget.controller,
         validator: widget.validator,
         obscureText: widget.obscureText,

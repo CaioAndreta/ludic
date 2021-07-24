@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 
+// ignore: must_be_immutable
 class Button extends StatelessWidget {
-  @override
   String label;
   void Function()? onPressed;
   Button({Key? key, this.label = '', this.onPressed}) : super(key: key);
@@ -27,7 +27,7 @@ class Button extends StatelessWidget {
             primary: AppColors.primary),
         child: Text(
           label,
-          style: TextStyle(color: AppColors.shape),
+          style: TextStyle(color: AppColors.secondary),
         ),
         onPressed: onPressed,
       ),

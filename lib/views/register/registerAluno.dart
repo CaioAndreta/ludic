@@ -27,13 +27,14 @@ class RegisterAlunoView extends StatelessWidget {
             children: [
               Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
-                  child:
-                      Text('REGISTRAR NOVO ALUNO', style: TextStyles.purpleTitleText)),
+                  child: Text('REGISTRAR NOVO ALUNO',
+                      style: TextStyles.primaryTitleText)),
               InputField(
+                height: 70,
                 controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Nome',
-                  labelStyle: TextStyles.purpleHintText,
+                  labelStyle: TextStyles.primaryHintText,
                   icon: Icon(
                     Icons.person,
                     color: AppColors.primary,
@@ -50,10 +51,11 @@ class RegisterAlunoView extends StatelessWidget {
                 },
               ),
               InputField(
+                height: 70,
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: TextStyles.purpleHintText,
+                  labelStyle: TextStyles.primaryHintText,
                   icon: Icon(
                     Icons.mail,
                     color: AppColors.primary,
@@ -70,11 +72,12 @@ class RegisterAlunoView extends StatelessWidget {
                 },
               ),
               InputField(
+                height: 70,
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Senha',
-                  labelStyle: TextStyles.purpleHintText,
+                  labelStyle: TextStyles.primaryHintText,
                   icon: Icon(
                     Icons.lock,
                     color: AppColors.primary,
@@ -96,9 +99,14 @@ class RegisterAlunoView extends StatelessWidget {
                     auth.createUserWithEmailAndPassword(
                         email: _emailController.text,
                         password: _passwordController.text);
-                        SharedPreferences preferences = await SharedPreferences.getInstance();
+                    SharedPreferences preferences =
+                        await SharedPreferences.getInstance();
                     preferences.setString('email', _emailController.text);
-                    preferences.setString('name', auth.currentUser!.displayName!.toUpperCase().toString());
+                    preferences.setString(
+                        'name',
+                        auth.currentUser!.displayName!
+                            .toUpperCase()
+                            .toString());
                     Navigator.of(context).pushReplacementNamed('/home');
                   }),
             ],

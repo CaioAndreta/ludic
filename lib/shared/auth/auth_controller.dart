@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/user_model.dart';
@@ -53,7 +51,11 @@ class AuthController {
     }
   }
 
-  static userLogin(BuildContext context, String email, String senha,) async {
+  static userLogin(
+    BuildContext context,
+    String email,
+    String senha,
+  ) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: senha);
       SharedPreferences preferences = await SharedPreferences.getInstance();

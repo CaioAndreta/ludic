@@ -32,12 +32,13 @@ class RegisterProfView extends StatelessWidget {
               Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Text('REGISTRAR NOVO PROFESSOR',
-                      style: TextStyles.purpleTitleText)),
+                      style: TextStyles.primaryTitleText)),
               InputField(
+                height: 70,
                   controller: _nameController,
                   decoration: InputDecoration(
                     labelText: 'Nome',
-                    labelStyle: TextStyles.purpleHintText,
+                    labelStyle: TextStyles.primaryHintText,
                     icon: Icon(
                       Icons.person,
                       color: AppColors.primary,
@@ -45,10 +46,11 @@ class RegisterProfView extends StatelessWidget {
                     border: InputBorder.none,
                   )),
               InputField(
+                height: 70,
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: TextStyles.purpleHintText,
+                    labelStyle: TextStyles.primaryHintText,
                     icon: Icon(
                       Icons.mail,
                       color: AppColors.primary,
@@ -56,11 +58,12 @@ class RegisterProfView extends StatelessWidget {
                     border: InputBorder.none,
                   )),
               InputField(
+                height: 70,
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Senha',
-                    labelStyle: TextStyles.purpleHintText,
+                    labelStyle: TextStyles.primaryHintText,
                     icon: Icon(
                       Icons.lock,
                       color: AppColors.primary,

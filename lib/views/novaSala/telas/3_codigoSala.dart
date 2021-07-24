@@ -24,8 +24,8 @@ class CodigoSalaView extends StatelessWidget {
             Container(
               width: size.width * 0.9,
               child: Text(
-                  'Tudo pronto! \n\nAgora que a sala foi criada, compartilhe o seguinte código para os alunos obterem acesso',
-                  style: TextStyles.whitetxtCodigoSala),
+                  'Tudo pronto! \n\nAgora que a sala foi criada, compartilhe o seguinte código para os alunos obterem acesso:',
+                  style: TextStyles.secondaryTxtCodigoSala),
             ),
             Container(height: size.height * 0.05),
             GestureDetector(
@@ -43,10 +43,10 @@ class CodigoSalaView extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   child: Text(
                     codigoSala,
-                    style: TextStyles.purpleCodigoSala,
+                    style: TextStyles.primaryCodigoSala,
                   )),
             ),
-            Text('(Toque para copiar)')
+            Text('(Toque para copiar)', style: TextStyles.secondaryHintText)
           ],
         ),
       ),

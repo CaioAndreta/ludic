@@ -38,7 +38,7 @@ class CodigoSalaView extends StatelessWidget {
                   ));
               },
               child: Container(
-                  color: AppColors.background,
+                  color: AppColors.secondary,
                   margin: EdgeInsets.symmetric(vertical: 10),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   child: Text(

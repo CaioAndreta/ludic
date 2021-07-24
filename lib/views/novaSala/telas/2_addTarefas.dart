@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
+import 'package:ludic/shared/widgets/InputFieldBorderless.dart';
+import 'package:ludic/shared/widgets/input_field.dart';
 import 'package:ludic/views/novaSala/novaSalaController.dart';
 
 class AddTarefasView extends StatefulWidget {
@@ -52,10 +54,32 @@ class _AddTarefasViewState extends State<AddTarefasView> {
         style: ElevatedButton.styleFrom(
           shape: CircleBorder(),
           padding: EdgeInsets.all(20),
-          primary: AppColors.background,
+          primary: AppColors.secondary,
         ),
         onPressed: () {
-          addTar();
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => Container(
+                    height: size.height * 0.8,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25.0),
+                            topRight: Radius.circular(25.0))),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: Text('Insira as informações da tarefa',
+                              style: TextStyles.blackHintText),
+                        ),
+                        InputFieldBorderless(label: 'Nome'),
+                        InputFieldBorderless(label: 'Descrição'),
+                      ],
+                    ),
+                  ));
         },
       ),
       body: Container(

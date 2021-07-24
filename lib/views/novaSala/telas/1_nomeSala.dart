@@ -28,14 +28,14 @@ class _NomeSalaViewState extends State<NomeSalaView> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 width: size.width * 0.8,
                 child: TextFormField(
-                    cursorColor: AppColors.background,
+                    cursorColor: AppColors.secondary,
                     decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.background),
+                          borderSide: BorderSide(color: AppColors.secondary),
                         ),
                         enabledBorder: UnderlineInputBorder(
                             borderSide:
-                                BorderSide(color: AppColors.background))))),
+                                BorderSide(color: AppColors.secondary))))),
           ],
         ),
       ),

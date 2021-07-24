@@ -23,7 +23,7 @@ class _NovaSalaViewState extends State<NovaSalaView> {
     return Scaffold(
         backgroundColor: AppColors.primary,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: AppColors.background),
+          iconTheme: IconThemeData(color: AppColors.secondary),
         ),
         body: IndexedStack(
           children: [NomeSalaView(), AddTarefasView(), CodigoSalaView()],
@@ -33,7 +33,7 @@ class _NovaSalaViewState extends State<NovaSalaView> {
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
           child: Container(
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: AppColors.secondary,
               borderRadius: BorderRadius.circular(29),
             ),
             margin: EdgeInsets.symmetric(vertical: 10),

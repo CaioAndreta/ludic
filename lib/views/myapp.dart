@@ -19,10 +19,10 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             floatingActionButtonTheme: FloatingActionButtonThemeData(
                 backgroundColor: AppColors.primary,
-                hoverColor: AppColors.background),
+                hoverColor: AppColors.secondary),
             brightness: Brightness.light,
             primaryColor: AppColors.primary,
-            backgroundColor: AppColors.background,
+            backgroundColor: AppColors.secondary,
             textTheme: TextTheme(
               headline1: TextStyle(
                   fontSize: 18.0,

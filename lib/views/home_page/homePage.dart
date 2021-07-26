@@ -33,100 +33,125 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final _firestore = FirebaseFirestore.instance;
-    return Scaffold(
-        backgroundColor: AppColors.secondary,
-        key: scaffoldKey,
-        drawerEnableOpenDragGesture: true,
-        drawer: Drawer(
-          child: Container(
-            color: AppColors.secondary,
-            child: Column(
-              children: [
-                ListTile(
-                  leading: Icon(Icons.exit_to_app),
-                  title: Text('Sair'),
-                  onTap: () async {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/', (route) => false);
-                    SharedPreferences preferences =
-                        await SharedPreferences.getInstance();
-                    preferences.remove('email');
-                  },
-                ),
-              ],
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          backgroundColor: AppColors.secondary,
+          key: scaffoldKey,
+          drawerEnableOpenDragGesture: true,
+          drawer: Drawer(
+            child: Container(
+              color: AppColors.secondary,
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.exit_to_app),
+                    title: Text('Sair'),
+                    onTap: () async {
+                      await FirebaseAuth.instance.signOut();
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil('/', (route) => false);
+                      SharedPreferences preferences =
+                          await SharedPreferences.getInstance();
+                      preferences.remove('email');
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        appBar: AppBar(actions: [
-          PopupMenuButton(
-            color: AppColors.secondary,
-            icon: Icon(Icons.add),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                  child: ListTile(
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed('/nova-sala');
-                      },
-                      title: Text('Criar uma Sala de Aula',
-                          style: TextStyles.primaryHintText))),
-              PopupMenuItem(
-                  child: ListTile(
-                      onTap: () {},
-                      title: Text('Entrar em uma Sala de Aula',
-                          style: TextStyles.primaryHintText)))
-            ],
-          )
-        ]),
-        body: StreamBuilder<QuerySnapshot>(
-            stream: _firestore.collection('salas').orderBy('nome').snapshots(),
-            builder: (_, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                    heightFactor: size.height,
-                    widthFactor: size.width,
-                    child: CircularProgressIndicator(color: AppColors.primary));
-              }
-              return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (_, index) {
-                    var doc = snapshot.data!.docs[index];
-                    return Container(
-                      padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
-                      height: 300,
-                      color: AppColors.secondary,
-                      width: double.infinity,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Card(
-                          elevation: 8,
-                          child: Container(
-                            color: AppColors.secondary,
-                            height: double.infinity,
-                            width: double.infinity,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(height: 20),
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                  child: Column(
-                                    children: [
-                                      Center(
-                                        child: Text(doc['nome'],
-                                            style: TextStyles.primaryHintText),
+          appBar: AppBar(
+              title: Text('LUDIC', style: TextStyles.primaryTitleText),
+              actions: [
+                PopupMenuButton(
+                  color: AppColors.secondary,
+                  icon: Icon(Icons.add),
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                        child: ListTile(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushReplacementNamed('/nova-sala');
+                            },
+                            title: Text('Criar uma Sala de Aula',
+                                style: TextStyles.primaryHintText))),
+                    PopupMenuItem(
+                        child: ListTile(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushReplacementNamed('/entrar-sala');
+                            },
+                            title: Text('Entrar em uma Sala de Aula',
+                                style: TextStyles.primaryHintText)))
+                  ],
+                ),
+              ],
+              bottom: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.home, color: AppColors.primary)),
+                  Tab(icon: Icon(Icons.person, color: AppColors.primary))
+                ],
+                indicatorColor: AppColors.primary,
+              )),
+          body: TabBarView(children: [
+            StreamBuilder<QuerySnapshot>(
+                stream:
+                    _firestore.collection('salas').orderBy('nome').snapshots(),
+                builder: (_, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                        heightFactor: size.height,
+                        widthFactor: size.width,
+                        child: CircularProgressIndicator(
+                            color: AppColors.primary));
+                  }
+                  return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (_, index) {
+                        var doc = snapshot.data!.docs[index];
+                        return Container(
+                          padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
+                          height: 300,
+                          color: AppColors.secondary,
+                          width: double.infinity,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Card(
+                              elevation: 8,
+                              child: Container(
+                                color: AppColors.secondary,
+                                height: double.infinity,
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(height: 20),
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                            child: Text(doc['nome'],
+                                                style: TextStyles
+                                                    .primaryTitleText),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  });
-            }));
+                        );
+                      });
+                }),
+            Container(
+              height: size.height * 0.5,
+              width: size.width * 0.5,
+              color: Colors.red,
+            )
+          ])),
+    );
   }
 }

@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: AppColors.secondary,
       appBar: AppBar(),
       body: Center(
         child: SingleChildScrollView(
@@ -57,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
               InputField(
                 height: 70,
                 controller: _passwordController,
-                obscureText: _isObscure,
+                obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Senha',
                   labelStyle: TextStyles.primaryHintText,
@@ -70,11 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                         _isObscure ? Icons.visibility : Icons.visibility_off,
                         color: AppColors.primary,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isObscure = !_isObscure;
-                        });
-                      }),
+                      onPressed: () {}),
                   border: InputBorder.none,
                 ),
                 validator: (value) {

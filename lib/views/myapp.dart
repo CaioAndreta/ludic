@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
+import 'package:ludic/views/EntrarSala/entrarSalaView.dart';
 import 'package:ludic/views/home_page/homePage.dart';
 import 'package:ludic/views/novaSala/novaSala.dart';
 import 'package:ludic/views/register/escolherRegistro.dart';
@@ -47,7 +48,8 @@ class MyApp extends StatelessWidget {
           '/register-aluno': (context) => RegisterAlunoView(),
           '/register-professor': (context) => RegisterProfView(),
           '/home': (context) => HomePage(),
-          '/nova-sala': (context) => NovaSalaView()
+          '/nova-sala': (context) => NovaSalaView(),
+          '/entrar-sala': (context) => EntrarSalaView()
         },
       ),
     );

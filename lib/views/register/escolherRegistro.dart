@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ludic/shared/themes/app_colors.dart';
+import 'package:ludic/shared/themes/app_textstyles.dart';
 
 class EscolherRegistroView extends StatelessWidget {
   const EscolherRegistroView({Key? key}) : super(key: key);
@@ -7,12 +9,12 @@ class EscolherRegistroView extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.purple.shade900,
+      backgroundColor: AppColors.primary,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text('Escolha o tipo de cadastro',
-            style: TextStyle(color: Colors.white)),
-        iconTheme: IconThemeData(color: Colors.white),
+            style: TextStyle(color: AppColors.secondary)),
+        iconTheme: IconThemeData(color: AppColors.secondary),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -27,7 +29,7 @@ class EscolherRegistroView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Sou um professor',
-                          style: Theme.of(context).textTheme.headline2),
+                          style: TextStyles.secondaryTitleText),
                       SizedBox(height: 15),
                       Text(
                         '👨‍🏫',
@@ -38,13 +40,13 @@ class EscolherRegistroView extends StatelessWidget {
                 ),
                 width: size.width,
                 height: size.height / 2,
-                decoration: BoxDecoration(color: Colors.purple.shade900)),
+                decoration: BoxDecoration(color: AppColors.primary)),
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Divider(
               thickness: 1,
-              color: Colors.white,
+              color: AppColors.secondary,
             ),
           ),
           Expanded(
@@ -57,7 +59,7 @@ class EscolherRegistroView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Sou um aluno',
-                          style: Theme.of(context).textTheme.headline2),
+                          style: TextStyles.secondaryTitleText),
                       SizedBox(height: 15),
                       Text(
                         '👨‍🎓',
@@ -68,7 +70,7 @@ class EscolherRegistroView extends StatelessWidget {
                 ),
                 width: size.width,
                 height: size.height / 2,
-                decoration: BoxDecoration(color: Colors.purple.shade900)),
+                decoration: BoxDecoration(color: AppColors.primary)),
           ),
         ],
       ),

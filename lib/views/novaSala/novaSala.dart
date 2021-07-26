@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
-import 'package:ludic/views/novaSala/novaSalaController.dart';
 import 'package:ludic/views/novaSala/telas/1_nomeSala.dart';
 import 'package:ludic/views/novaSala/telas/2_addTarefas.dart';
 import 'package:ludic/views/novaSala/telas/3_codigoSala.dart';
+import 'package:short_uuids/short_uuids.dart';
 
 class NovaSalaView extends StatefulWidget {
   const NovaSalaView({Key? key}) : super(key: key);
@@ -14,19 +15,28 @@ class NovaSalaView extends StatefulWidget {
 }
 
 class _NovaSalaViewState extends State<NovaSalaView> {
+  var nameSalaController = TextEditingController();
+  List tarefas = [];
+  var uuid = ShortUuid.init();
   int index = 0;
-  var novaSalaController = NovaSalaController();
-  final pages = [NomeSalaView(), AddTarefasView(), CodigoSalaView()];
+
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    String codigoSala = uuid.generate();
+    var db = FirebaseFirestore.instance;
     return Scaffold(
         backgroundColor: AppColors.primary,
         appBar: AppBar(
           iconTheme: IconThemeData(color: AppColors.secondary),
         ),
         body: IndexedStack(
-          children: [NomeSalaView(), AddTarefasView(), CodigoSalaView()],
+          children: [
+            NomeSalaView(controller: nameSalaController),
+            AddTarefasView(tarefas: tarefas),
+            CodigoSalaView(
+              codigo: codigoSala,
+            )
+          ],
           index: index,
         ),
         bottomNavigationBar: Padding(
@@ -51,14 +61,20 @@ class _NovaSalaViewState extends State<NovaSalaView> {
                 onPressed: () {
                   if (index < 2) {
                     index += 1;
+                    setState(() {});
                   } else {
+                    db.collection('salas').add({
+                      'nome': nameSalaController.text,
+                      'tarefas': tarefas,
+                      'codigo': codigoSala,
+                      'alunos': []
+                    });
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
                       ..showSnackBar(SnackBar(
-                        content: Text('Cadastro efetuado com sucesso!'),
-                      ));
+                          content: Text('Cadastro efetuado com sucesso!')));
+                    Navigator.of(context).pop();
                   }
-                  setState(() {});
                 }),
           ),
         ));

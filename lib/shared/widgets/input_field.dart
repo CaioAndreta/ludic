@@ -7,6 +7,7 @@ class InputField extends StatefulWidget {
   double height;
   TextEditingController? controller;
   bool obscureText;
+  String? initialValue;
   var validator;
   InputField(
       {Key? key,
@@ -14,6 +15,7 @@ class InputField extends StatefulWidget {
       required this.height,
       this.obscureText = false,
       this.controller,
+      this.initialValue,
       this.validator})
       : super(key: key);
 
@@ -35,8 +37,8 @@ class _InputFieldState extends State<InputField> {
           borderRadius: BorderRadius.circular(29),
           border: Border.all(color: AppColors.primary)),
       child: TextFormField(
-        maxLines: 3,
-        keyboardType: TextInputType.multiline,
+        initialValue: widget.initialValue,
+        enableInteractiveSelection: true,
         controller: widget.controller,
         validator: widget.validator,
         obscureText: widget.obscureText,

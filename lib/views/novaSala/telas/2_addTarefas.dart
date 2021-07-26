@@ -4,21 +4,19 @@ import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/input_field.dart';
-import 'package:ludic/views/novaSala/novaSalaController.dart';
 
 class AddTarefasView extends StatefulWidget {
-  const AddTarefasView({Key? key}) : super(key: key);
+  List tarefas;
+  AddTarefasView({Key? key, required this.tarefas}) : super(key: key);
 
   @override
   _AddTarefasViewState createState() => _AddTarefasViewState();
 }
 
 class _AddTarefasViewState extends State<AddTarefasView> {
-  final novaSalaController = NovaSalaController();
   var selectedDate = DateTime.now();
-  List tarefas = [];
   addTarefa(String name, String desc) {
-    tarefas.add({
+    widget.tarefas.add({
       'nome': name,
       'descricao': desc,
     });
@@ -26,7 +24,7 @@ class _AddTarefasViewState extends State<AddTarefasView> {
   }
 
   deleteTarefa(int index) {
-    tarefas.remove(tarefas[index]);
+    widget.tarefas.remove(widget.tarefas[index]);
     setState(() {});
   }
 
@@ -118,7 +116,7 @@ class _AddTarefasViewState extends State<AddTarefasView> {
                 physics: ScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: tarefas.length,
+                itemCount: widget.tarefas.length,
                 itemBuilder: (_, index) {
                   return Column(
                     children: [
@@ -138,14 +136,16 @@ class _AddTarefasViewState extends State<AddTarefasView> {
                                       padding:
                                           EdgeInsets.fromLTRB(10, 10, 0, 0),
                                       child: Text(
-                                          tarefas[index]['nome'].toString(),
+                                          widget.tarefas[index]['nome']
+                                              .toString(),
                                           style: TextStyles.cardTitle),
                                     ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(10, 15, 0, 0),
                                     child: Text(
-                                        tarefas[index]['descricao'].toString(),
+                                        widget.tarefas[index]['descricao']
+                                            .toString(),
                                         style: TextStyles.cardDesc),
                                   )
                                 ],
@@ -154,14 +154,21 @@ class _AddTarefasViewState extends State<AddTarefasView> {
                               Align(
                                 alignment: Alignment.topRight,
                                 child: PopupMenuButton(
+                                  color: AppColors.secondary,
                                   itemBuilder: (_) => [
                                     PopupMenuItem(
                                         child: ListTile(
-                                            leading: Icon(Icons.edit),
-                                            title: Text('Editar'))),
+                                            leading: Icon(Icons.edit,
+                                                color: AppColors.primary),
+                                            title: Text('Editar',
+                                                style: TextStyles
+                                                    .primaryHintText))),
                                     PopupMenuItem(
                                         child: ListTile(
-                                            onTap: () => deleteTarefa(index),
+                                            onTap: () {
+                                              deleteTarefa(index);
+                                              Navigator.pop(context);
+                                            },
                                             leading: Icon(Icons.delete,
                                                 color: AppColors.delete),
                                             title: Text('Apagar',

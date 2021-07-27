@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+            canvasColor: AppColors.secondary,
             floatingActionButtonTheme: FloatingActionButtonThemeData(
                 backgroundColor: AppColors.primary,
                 hoverColor: AppColors.secondary),

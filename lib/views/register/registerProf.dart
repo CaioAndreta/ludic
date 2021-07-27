@@ -1,10 +1,8 @@
-import 'dart:convert';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ludic/shared/auth/auth_controller.dart';
-import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
@@ -20,8 +18,8 @@ class RegisterProfView extends StatelessWidget {
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _nameController = TextEditingController();
     final auth = FirebaseAuth.instance;
-
     return Scaffold(
+      backgroundColor: AppColors.secondary,
       appBar: AppBar(),
       body: Center(
         child: SingleChildScrollView(
@@ -35,46 +33,80 @@ class RegisterProfView extends StatelessWidget {
                       style: TextStyles.primaryTitleText)),
               InputField(
                 height: 70,
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Nome',
-                    labelStyle: TextStyles.primaryHintText,
-                    icon: Icon(
-                      Icons.person,
-                      color: AppColors.primary,
-                    ),
-                    border: InputBorder.none,
-                  )),
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Nome',
+                  labelStyle: TextStyles.primaryHintText,
+                  icon: Icon(
+                    Icons.person,
+                    color: AppColors.primary,
+                  ),
+                  border: InputBorder.none,
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Insira um Nome';
+                  } else if (value.length < 3) {
+                    return 'O nome deve ter mais de 3 caracteres';
+                  }
+                  return null;
+                },
+              ),
               InputField(
                 height: 70,
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: TextStyles.primaryHintText,
-                    icon: Icon(
-                      Icons.mail,
-                      color: AppColors.primary,
-                    ),
-                    border: InputBorder.none,
-                  )),
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyles.primaryHintText,
+                  icon: Icon(
+                    Icons.mail,
+                    color: AppColors.primary,
+                  ),
+                  border: InputBorder.none,
+                ),
+                validator: (email) {
+                  if ((email!.isEmpty)) {
+                    return 'Insira um email';
+                  } else if (!EmailValidator.validate(email)) {
+                    return 'Email Inválido';
+                  }
+                  return null;
+                },
+              ),
               InputField(
                 height: 70,
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Senha',
-                    labelStyle: TextStyles.primaryHintText,
-                    icon: Icon(
-                      Icons.lock,
-                      color: AppColors.primary,
-                    ),
-                    border: InputBorder.none,
-                  )),
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Senha',
+                  labelStyle: TextStyles.primaryHintText,
+                  icon: Icon(
+                    Icons.lock,
+                    color: AppColors.primary,
+                  ),
+                  border: InputBorder.none,
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Insira uma senha';
+                  } else if (value.length < 6) {
+                    return 'A senha deve ter mais de 6 caracteres';
+                  }
+                  return null;
+                },
+              ),
               Button(
                   label: 'Registrar',
-                  onPressed: () {
-                    AuthController.doSignUp(_nameController.text,
-                        _emailController.text, _passwordController.text);
+                  onPressed: () async {
+                    auth.createUserWithEmailAndPassword(
+                        email: _emailController.text,
+                        password: _passwordController.text);
+                    SharedPreferences preferences =
+                        await SharedPreferences.getInstance();
+                    preferences.setString('email', _emailController.text);
+                    preferences.setString(
+                        'name', _nameController.text.toUpperCase());
+                    Navigator.of(context).pushNamed('/home');
                   }),
             ],
           ),

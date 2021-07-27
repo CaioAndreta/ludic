@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
@@ -18,6 +19,7 @@ class RegisterAlunoView extends StatelessWidget {
     TextEditingController _nameController = TextEditingController();
     final auth = FirebaseAuth.instance;
     return Scaffold(
+      backgroundColor: AppColors.secondary,
       appBar: AppBar(),
       body: Center(
         child: SingleChildScrollView(
@@ -96,18 +98,20 @@ class RegisterAlunoView extends StatelessWidget {
               Button(
                   label: 'Registrar',
                   onPressed: () async {
-                    auth.createUserWithEmailAndPassword(
-                        email: _emailController.text,
-                        password: _passwordController.text);
+                    auth
+                        .createUserWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text)
+                        .then((result) {
+                      return result.user!.updateDisplayName(
+                          _nameController.text.toUpperCase().trim());
+                    });
                     SharedPreferences preferences =
                         await SharedPreferences.getInstance();
                     preferences.setString('email', _emailController.text);
                     preferences.setString(
-                        'name',
-                        auth.currentUser!.displayName!
-                            .toUpperCase()
-                            .toString());
-                    Navigator.of(context).pushReplacementNamed('/home');
+                        'name', _nameController.text.toUpperCase().trim());
+                    Navigator.of(context).pushNamed('/home');
                   }),
             ],
           ),

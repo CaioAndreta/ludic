@@ -60,7 +60,8 @@ class AuthController {
       await auth.signInWithEmailAndPassword(email: email, password: senha);
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString('email', email);
-      Navigator.of(context).pushReplacementNamed('/home');
+      preferences.setString('name', auth.currentUser!.displayName.toString());
+      Navigator.of(context).pushNamed('/home');
     } on FirebaseAuthException catch (e, s) {
       captureErrors(context, e, s);
     }

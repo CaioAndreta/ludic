@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,18 +16,19 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   String email = '';
-  String name = '';
-  Future getEmail() async {
+  String displayName = '';
+  Future getUser() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       email = preferences.getString('email')!;
+      displayName = preferences.getString('name')!;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getEmail();
+    getUser();
   }
 
   @override
@@ -40,24 +42,61 @@ class _HomePageState extends State<HomePage> {
           key: scaffoldKey,
           drawerEnableOpenDragGesture: true,
           drawer: Drawer(
-            child: Container(
-              color: AppColors.secondary,
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: Icon(Icons.exit_to_app),
-                    title: Text('Sair'),
-                    onTap: () async {
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.of(context)
-                          .pushNamedAndRemoveUntil('/', (route) => false);
-                      SharedPreferences preferences =
-                          await SharedPreferences.getInstance();
-                      preferences.remove('email');
-                    },
+            child: ListView(
+              children: [
+                DrawerHeader(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          child: Text(
+                            displayName,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: AppColors.secondary, fontSize: 25),
+                          ),
+                        ),
+                        Text(
+                          email,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: AppColors.secondary, fontSize: 15),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                  ),
+                ),
+                Container(
+                  color: AppColors.secondary,
+                  child: Column(
+                    children: [
+                      Container(
+                        color: AppColors.secondary,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.exit_to_app),
+                              title: Text('Sair'),
+                              onTap: () async {
+                                await FirebaseAuth.instance.signOut();
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    '/', (route) => false);
+                                SharedPreferences preferences =
+                                    await SharedPreferences.getInstance();
+                                preferences.remove('email');
+                                preferences.remove('name');
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           appBar: AppBar(

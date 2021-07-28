@@ -4,17 +4,38 @@ import 'package:ludic/shared/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController {
-  static final auth = FirebaseAuth.instance;
-  static UserModel? _user;
+  final auth = FirebaseAuth.instance;
+  var _user = 'b';
 
-  get user => _user!;
+  get user => _user;
 
-  static void doSignUp(String name, email, password) async {
-    UserModel user = UserModel(name: name, email: email);
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('email', email);
-    preferences.setString('nome', name);
-    auth.createUserWithEmailAndPassword(email: email, password: password);
+  setUser(BuildContext context, UserModel? user) {
+    if (user != null) {
+      final UserModel usuario;
+      usuario = user;
+      Navigator.of(context).pushReplacementNamed('/home');
+      return usuario;
+    } else {
+      Navigator.of(context).pushReplacementNamed('/');
+    }
+  }
+
+  Future<void> saveUser(UserModel user) async {
+    final instance = await SharedPreferences.getInstance();
+    await instance.setString('user', user.toJson());
+    return;
+  }
+
+  Future<void> currentUser(BuildContext context) async {
+    final instance = await SharedPreferences.getInstance();
+    await Future.delayed(Duration(seconds: 2));
+    if (instance.containsKey('user')) {
+      final json = instance.get('user') as String;
+      setUser(context, UserModel.fromJson(json));
+      return;
+    } else {
+      setUser(context, null);
+    }
   }
 
   static showPopUp(BuildContext context, String msg) {
@@ -51,39 +72,45 @@ class AuthController {
     }
   }
 
-  static userLogin(
+  userLogin(
     BuildContext context,
     String email,
     String senha,
   ) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: senha);
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString('email', email);
-      preferences.setString('name', auth.currentUser!.displayName.toString());
+      final user = UserModel(
+          name: auth.currentUser!.displayName,
+          email: auth.currentUser!.email,
+          id: auth.currentUser!.uid);
+      saveUser(user);
       Navigator.of(context).pushNamed('/home');
     } on FirebaseAuthException catch (e, s) {
       captureErrors(context, e, s);
     }
   }
 
-//   static void setUser(BuildContext context, UserModel? user) {
-//     if (user != null) {
-//       // saveUser(user);
-//       _user = user;
-//       Navigator.pushReplacementNamed(context, '/home');
-//     } else {
-//       Navigator.pushReplacementNamed(context, '/login');
-//     }
-//   }
-// }
+  alunoRegister(BuildContext context,
+      {required String email,
+      required String password,
+      required String name}) async {
+    final authController = AuthController();
+    auth.createUserWithEmailAndPassword(email: email, password: password);
+    final currUser = auth.currentUser;
+    currUser!.updateDisplayName(name.toUpperCase().trim());
+    final user = UserModel(name: name, email: email, id: currUser.uid);
+    authController.setUser(context, user);
+  }
 
-// Future<UserModel> getSavedUser() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   String jsonUser = prefs.getString('saved_user') as String;
-//   print(jsonUser);
-
-//   Map<String, dynamic> mapUser = json.decode(jsonUser);
-//   UserModel user = UserModel.fromJson(mapUser);
-//   return user;
+  profRegister(BuildContext context,
+      {required String email,
+      required String password,
+      required String name}) async {
+    final authController = AuthController();
+    auth.createUserWithEmailAndPassword(email: email, password: password);
+    final currUser = auth.currentUser;
+    currUser!.updateDisplayName(name.toUpperCase().trim());
+    final user = UserModel(name: name, email: email, id: currUser.uid);
+    authController.setUser(context, user);
+  }
 }

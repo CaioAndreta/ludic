@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ludic/shared/models/user_model.dart';
+import 'package:ludic/shared/auth/auth_controller.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
+import 'package:ludic/views/home_page/widgets/HomeDrawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,24 +16,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
-  String email = '';
-  String displayName = '';
-  Future getUser() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      email = preferences.getString('email')!;
-      displayName = preferences.getString('name')!;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getUser();
-  }
 
   @override
   Widget build(BuildContext context) {
+    var authController = AuthController();
+    var usuario = authController.user;
     var size = MediaQuery.of(context).size;
     final _firestore = FirebaseFirestore.instance;
     return DefaultTabController(
@@ -42,61 +30,17 @@ class _HomePageState extends State<HomePage> {
           key: scaffoldKey,
           drawerEnableOpenDragGesture: true,
           drawer: Drawer(
-            child: ListView(
-              children: [
-                DrawerHeader(
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Text(
-                            displayName,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: AppColors.secondary, fontSize: 25),
-                          ),
-                        ),
-                        Text(
-                          email,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: AppColors.secondary, fontSize: 15),
-                        ),
-                      ],
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                  ),
-                ),
-                Container(
-                  color: AppColors.secondary,
-                  child: Column(
-                    children: [
-                      Container(
-                        color: AppColors.secondary,
-                        child: Column(
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.exit_to_app),
-                              title: Text('Sair'),
-                              onTap: () async {
-                                await FirebaseAuth.instance.signOut();
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    '/', (route) => false);
-                                SharedPreferences preferences =
-                                    await SharedPreferences.getInstance();
-                                preferences.remove('email');
-                                preferences.remove('name');
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            child: ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Sair'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/', (route) => false);
+                SharedPreferences preferences =
+                    await SharedPreferences.getInstance();
+                preferences.remove('user');
+              },
             ),
           ),
           appBar: AppBar(
@@ -134,8 +78,11 @@ class _HomePageState extends State<HomePage> {
               )),
           body: TabBarView(children: [
             StreamBuilder<QuerySnapshot>(
-                stream:
-                    _firestore.collection('salas').orderBy('nome').snapshots(),
+                stream: _firestore
+                    .collection('salas')
+                    // .where('alunos', arrayContains: userInfo.name)
+                    .orderBy('nome')
+                    .snapshots(),
                 builder: (_, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
@@ -189,6 +136,7 @@ class _HomePageState extends State<HomePage> {
               height: size.height * 0.5,
               width: size.width * 0.5,
               color: Colors.red,
+              child: Text(usuario.toString()),
             )
           ])),
     );

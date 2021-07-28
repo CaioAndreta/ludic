@@ -1,29 +1,33 @@
-
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ludic/shared/auth/auth_controller.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
-import 'package:ludic/shared/widgets/input_field.dart';
+import 'package:ludic/shared/widgets/inputField.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RegisterProfView extends StatelessWidget {
+class RegisterProfView extends StatefulWidget {
   const RegisterProfView({Key? key}) : super(key: key);
 
+  @override
+  _RegisterProfViewState createState() => _RegisterProfViewState();
+}
+
+class _RegisterProfViewState extends State<RegisterProfView> {
   @override
   Widget build(BuildContext context) {
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _nameController = TextEditingController();
-    final auth = FirebaseAuth.instance;
-    return Scaffold(
-      backgroundColor: AppColors.secondary,
-      appBar: AppBar(),
-      body: Center(
-        child: SingleChildScrollView(
-          reverse: true,
+    final _formKey = GlobalKey<FormState>();
+    return Center(
+      child: SingleChildScrollView(
+        reverse: true,
+        child: Form(
+          key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -32,17 +36,9 @@ class RegisterProfView extends StatelessWidget {
                   child: Text('REGISTRAR NOVO PROFESSOR',
                       style: TextStyles.primaryTitleText)),
               InputField(
-                height: 70,
+                label: 'Nome',
+                icon: Icons.person,
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Nome',
-                  labelStyle: TextStyles.primaryHintText,
-                  icon: Icon(
-                    Icons.person,
-                    color: AppColors.primary,
-                  ),
-                  border: InputBorder.none,
-                ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Insira um Nome';
@@ -53,17 +49,9 @@ class RegisterProfView extends StatelessWidget {
                 },
               ),
               InputField(
-                height: 70,
+                label: 'Email',
+                icon: Icons.mail,
                 controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: TextStyles.primaryHintText,
-                  icon: Icon(
-                    Icons.mail,
-                    color: AppColors.primary,
-                  ),
-                  border: InputBorder.none,
-                ),
                 validator: (email) {
                   if ((email!.isEmpty)) {
                     return 'Insira um email';
@@ -74,18 +62,16 @@ class RegisterProfView extends StatelessWidget {
                 },
               ),
               InputField(
-                height: 70,
+                label: 'Senha',
+                icon: Icons.lock,
+                suffixIcon: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: IconButton(
+                      icon: Icon(Icons.visibility, color: AppColors.primary),
+                      onPressed: () {}),
+                ),
                 controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  labelStyle: TextStyles.primaryHintText,
-                  icon: Icon(
-                    Icons.lock,
-                    color: AppColors.primary,
-                  ),
-                  border: InputBorder.none,
-                ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Insira uma senha';
@@ -97,16 +83,13 @@ class RegisterProfView extends StatelessWidget {
               ),
               Button(
                   label: 'Registrar',
-                  onPressed: () async {
-                    auth.createUserWithEmailAndPassword(
-                        email: _emailController.text,
-                        password: _passwordController.text);
-                    SharedPreferences preferences =
-                        await SharedPreferences.getInstance();
-                    preferences.setString('email', _emailController.text);
-                    preferences.setString(
-                        'name', _nameController.text.toUpperCase());
-                    Navigator.of(context).pushNamed('/home');
+                  onPressed: () {
+                    final authController = AuthController();
+                    if (_formKey.currentState!.validate())
+                      authController.profRegister(context,
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                          name: _nameController.text);
                   }),
             ],
           ),

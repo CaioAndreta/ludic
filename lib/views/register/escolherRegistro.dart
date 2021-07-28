@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
+import 'package:ludic/views/register/registerController.dart';
 
 class EscolherRegistroView extends StatelessWidget {
   const EscolherRegistroView({Key? key}) : super(key: key);
@@ -23,7 +24,8 @@ class EscolherRegistroView extends StatelessWidget {
             child: Container(
                 child: TextButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/register-professor');
+                    RegisterController.isTeacher = true;
+                    Navigator.of(context).pushNamed('/register');
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -53,7 +55,8 @@ class EscolherRegistroView extends StatelessWidget {
             child: Container(
                 child: TextButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/register-aluno');
+                    RegisterController.isTeacher = false;
+                    Navigator.of(context).pushNamed('/register');
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

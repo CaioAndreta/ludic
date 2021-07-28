@@ -2,11 +2,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ludic/shared/auth/auth_controller.dart';
-import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
-import 'package:ludic/shared/widgets/input_field.dart';
+import 'package:ludic/shared/widgets/inputField.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,107 +15,98 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _isObscure = true;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    TextEditingController _emailController = TextEditingController();
-    TextEditingController _passwordController = TextEditingController();
     var size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: AppColors.secondary,
       appBar: AppBar(),
       body: Center(
         child: SingleChildScrollView(
           reverse: true,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Text('LOGIN', style: TextStyles.primaryTitleText)),
-              InputField(
-                height: 70,
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: TextStyles.primaryHintText,
-                  icon: Icon(
-                    Icons.mail,
-                    color: AppColors.primary,
-                  ),
-                  border: InputBorder.none,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Text('LOGIN', style: TextStyles.primaryTitleText)),
+                InputField(
+                  label: 'Email',
+                  icon: Icons.mail,
+                  controller: _emailController,
+                  validator: (email) {
+                    if ((email!.isEmpty)) {
+                      return 'Insira um email';
+                    } else if (!EmailValidator.validate(email)) {
+                      return 'Email Inválido';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (email) {
-                  if ((email!.isEmpty)) {
-                    return 'Insira um email';
-                  } else if (!EmailValidator.validate(email)) {
-                    return 'Email Inválido';
-                  }
-                  return null;
-                },
-              ),
-              InputField(
-                height: 70,
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  labelStyle: TextStyles.primaryHintText,
-                  icon: Icon(
-                    Icons.lock,
-                    color: AppColors.primary,
+                InputField(
+                  suffixIcon: Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: IconButton(
+                        icon: Icon(Icons.visibility, color: AppColors.primary),
+                        onPressed: () {}),
                   ),
-                  suffixIcon: IconButton(
-                      icon: Icon(
-                        _isObscure ? Icons.visibility : Icons.visibility_off,
-                        color: AppColors.primary,
-                      ),
-                      onPressed: () {}),
-                  border: InputBorder.none,
+                  icon: Icons.lock,
+                  label: 'Senha',
+                  controller: _passwordController,
+                  obscureText: true,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Insira uma senha';
+                    } else if (value.length < 6) {
+                      return 'A senha deve ter mais de 6 caracteres';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Insira uma senha';
-                  } else if (value.length < 6) {
-                    return 'A senha deve ter mais de 6 caracteres';
-                  }
-                  return null;
-                },
-              ),
-              Button(
-                label: 'Login',
-                onPressed: () {
-                  AuthController.userLogin(context,
-                      _emailController.text.trim(), _passwordController.text);
-                },
-              ),
-              Center(
-                child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    width: size.width * 0.8,
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Não tem uma conta?',
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 16)),
-                        GestureDetector(
-                          child: Text(
-                            ' Cadastre-se',
-                            style: TextStyle(
-                                color: AppColors.primary, fontSize: 16),
-                          ),
-                          onTap: () => {
-                            Navigator.of(context)
-                                .pushNamed('/escolher-registro')
-                          },
-                        )
-                      ],
-                    )),
-              )
-            ],
+                Button(
+                  label: 'Login',
+                  onPressed: () {
+                    final form = _formKey.currentState!;
+                    if (form.validate()) {
+                      final authController = AuthController();
+                      authController.userLogin(context, _emailController.text.trim(),
+                          _passwordController.text);
+                    }
+                  },
+                ),
+                Center(
+                  child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      width: size.width * 0.8,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Não tem uma conta?',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16)),
+                          GestureDetector(
+                            child: Text(
+                              ' Cadastre-se',
+                              style: TextStyle(
+                                  color: AppColors.primary, fontSize: 16),
+                            ),
+                            onTap: () => {
+                              Navigator.of(context)
+                                  .pushNamed('/escolher-registro')
+                            },
+                          )
+                        ],
+                      )),
+                )
+              ],
+            ),
           ),
         ),
       ),

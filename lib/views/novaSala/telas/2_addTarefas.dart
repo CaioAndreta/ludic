@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
-import 'package:ludic/shared/widgets/input_field.dart';
+import 'package:ludic/shared/widgets/inputField.dart';
 
 class AddTarefasView extends StatefulWidget {
   List tarefas;
@@ -43,6 +43,7 @@ class _AddTarefasViewState extends State<AddTarefasView> {
           primary: AppColors.secondary,
         ),
         onPressed: () {
+          final _formKey = GlobalKey<FormState>();
           showModalBottomSheet(
               context: context,
               isScrollControlled: true,
@@ -57,42 +58,41 @@ class _AddTarefasViewState extends State<AddTarefasView> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Text('Insira as informações da tarefa',
-                                  style: TextStyles.blackTitleText),
-                            ),
-                            InputField(
-                                controller: _nameController,
-                                height: 70,
-                                decoration: InputDecoration(
-                                    labelText: 'Nome',
-                                    labelStyle: TextStyles.primaryHintText,
-                                    border: InputBorder.none)),
-                            // InputField(
-                            //     controller: _pesoController,
-                            //     height: 70,
-                            //     decoration: InputDecoration(
-                            //         labelText: 'Peso',
-                            //         labelStyle: TextStyles.primaryHintText,
-                            //         border: InputBorder.none)),
-                            InputField(
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Text('Insira as informações da tarefa',
+                                    style: TextStyles.blackTitleText),
+                              ),
+                              InputField(
+                                  validator: (value) {
+                                    if (value.length < 4) {
+                                      return 'Insira um nome de pelo menos 4 caracteres';
+                                    }
+                                    return null;
+                                  },
+                                  icon: Icons.tag,
+                                  label: 'Nome',
+                                  controller: _nameController),
+                              InputField(
+                                label: 'Descrição',
+                                icon: Icons.description_outlined,
                                 controller: _descController,
-                                height: 120,
-                                decoration: InputDecoration(
-                                    labelText: 'Descrição',
-                                    labelStyle: TextStyles.primaryHintText,
-                                    border: InputBorder.none)),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
                         Button(
                           label: 'Adicionar',
                           onPressed: () {
-                            addTarefa(
-                                _nameController.text, _descController.text);
-                            Navigator.pop(context);
+                            if (_formKey.currentState!.validate()) {
+                              addTarefa(
+                                  _nameController.text, _descController.text);
+                              Navigator.pop(context);
+                            }
                           },
                         )
                       ],

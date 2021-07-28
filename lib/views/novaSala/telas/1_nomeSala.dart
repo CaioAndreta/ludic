@@ -11,6 +11,7 @@ class NomeSalaView extends StatefulWidget {
 }
 
 class _NomeSalaViewState extends State<NomeSalaView> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -26,9 +27,21 @@ class _NomeSalaViewState extends State<NomeSalaView> {
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               width: size.width * 0.8,
               child: TextFormField(
+                  validator: (value) {
+                    if (value!.length <= 4) {
+                      return 'Insira um nome de mais de 4 caracteres';
+                    }
+                    return null;
+                  },
                   controller: widget.controller,
+                  style: TextStyle(color: Colors.white),
                   cursorColor: AppColors.secondary,
                   decoration: InputDecoration(
+                      errorStyle: TextStyle(
+                          fontSize: 14.0, color: AppColors.brightDelete),
+                      errorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColors.brightDelete, width: 2)),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: AppColors.secondary),
                       ),

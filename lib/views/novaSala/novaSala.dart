@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ludic/shared/auth/auth_controller.dart';
+import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
+import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/views/novaSala/telas/1_nomeSala.dart';
 import 'package:ludic/views/novaSala/telas/2_addTarefas.dart';
 import 'package:ludic/views/novaSala/telas/3_codigoSala.dart';
@@ -19,7 +22,7 @@ class _NovaSalaViewState extends State<NovaSalaView> {
   List tarefas = [];
   var uuid = ShortUuid.init();
   int index = 0;
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     String codigoSala = uuid.generate();
@@ -29,15 +32,18 @@ class _NovaSalaViewState extends State<NovaSalaView> {
         appBar: AppBar(
           iconTheme: IconThemeData(color: AppColors.secondary),
         ),
-        body: IndexedStack(
-          children: [
-            NomeSalaView(controller: nameSalaController),
-            AddTarefasView(tarefas: tarefas),
-            CodigoSalaView(
-              codigo: codigoSala,
-            )
-          ],
-          index: index,
+        body: Form(
+          key: _formKey,
+          child: IndexedStack(
+            children: [
+              NomeSalaView(controller: nameSalaController),
+              AddTarefasView(tarefas: tarefas),
+              CodigoSalaView(
+                codigo: codigoSala,
+              )
+            ],
+            index: index,
+          ),
         ),
         bottomNavigationBar: Padding(
           padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -59,21 +65,49 @@ class _NovaSalaViewState extends State<NovaSalaView> {
                   style: TextStyle(color: AppColors.primary),
                 ),
                 onPressed: () {
-                  if (index < 2) {
-                    index += 1;
-                    setState(() {});
-                  } else {
-                    db.collection('salas').add({
-                      'nome': nameSalaController.text,
-                      'tarefas': tarefas,
-                      'codigo': codigoSala,
-                      'alunos': []
-                    });
-                    ScaffoldMessenger.of(context)
-                      ..removeCurrentSnackBar()
-                      ..showSnackBar(SnackBar(
-                          content: Text('Cadastro efetuado com sucesso!')));
-                    Navigator.of(context).pop();
+                  switch (index) {
+                    case 0:
+                      if (_formKey.currentState!.validate()) {
+                        index += 1;
+                        setState(() {});
+                      }
+                      break;
+                    case 1:
+                      if (tarefas.isNotEmpty) {
+                        index += 1;
+                        setState(() {});
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                                  title: Text(
+                                      'Por favor, insira ao menos uma tarefa ao planejamento'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'OK',
+                                          style: TextStyles.primaryCodigoSala,
+                                        ))
+                                  ],
+                                ));
+                      }
+                      break;
+                    case 2:
+                      db.collection('salas').add({
+                        'nome': nameSalaController.text,
+                        'tarefas': tarefas,
+                        'codigo': codigoSala,
+                        // 'professor': userInfo.name,
+                        'alunos': []
+                      });
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(SnackBar(
+                            content: Text('Cadastro efetuado com sucesso!')));
+                      Navigator.of(context).pop();
                   }
                 }),
           ),

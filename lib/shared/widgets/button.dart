@@ -23,7 +23,7 @@ class Button extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18.0),
             ),
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            padding: EdgeInsets.symmetric(vertical: 21, horizontal: 40),
             primary: AppColors.primary),
         child: Text(
           label,

@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ludic/shared/auth/auth_controller.dart';
+import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ludic/views/home_page/widgets/HomeDrawer.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final UserModel user;
+  const HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -18,8 +18,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var authController = AuthController();
-    final usuario = authController.getUser(context);
     var size = MediaQuery.of(context).size;
     final _firestore = FirebaseFirestore.instance;
     return DefaultTabController(
@@ -28,20 +26,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: AppColors.secondary,
           key: scaffoldKey,
           drawerEnableOpenDragGesture: true,
-          drawer: Drawer(
-            child: ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text('Sair'),
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/', (route) => false);
-                SharedPreferences preferences =
-                    await SharedPreferences.getInstance();
-                preferences.remove('user');
-              },
-            ),
-          ),
+          drawer: HomeDrawer(userInfo: widget.user),
           appBar: AppBar(
               title: Text('LUDIC', style: TextStyles.primaryTitleText),
               actions: [
@@ -79,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             StreamBuilder<QuerySnapshot>(
                 stream: _firestore
                     .collection('salas')
-                    // .where('alunos', arrayContains: userInfo.name)
+                    .where('alunos', arrayContains: widget.user.id)
                     .orderBy('nome')
                     .snapshots(),
                 builder: (_, snapshot) {
@@ -132,11 +117,17 @@ class _HomePageState extends State<HomePage> {
                       });
                 }),
             Container(
-              height: size.height * 0.5,
-              width: size.width * 0.5,
-              color: Colors.red,
-              child: Center(child: Text('s')),
-            )
+                height: size.height * 0.5,
+                width: size.width * 0.5,
+                color: Colors.red,
+                child: Center(
+                    child: Column(
+                  children: [
+                    Text('${widget.user.name}'),
+                    Text('${widget.user.email}'),
+                    Text('${widget.user.id}'),
+                  ],
+                ))),
           ])),
     );
   }

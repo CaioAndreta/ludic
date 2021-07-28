@@ -31,7 +31,7 @@ class HomeDrawer extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'displayName',
+                    '${userInfo.email}',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: AppColors.secondary, fontSize: 15),
                   ),
@@ -59,7 +59,7 @@ class HomeDrawer extends StatelessWidget {
                               .pushNamedAndRemoveUntil('/', (route) => false);
                           SharedPreferences preferences =
                               await SharedPreferences.getInstance();
-                          preferences.remove('email');
+                          preferences.remove('user');
                         },
                       ),
                     ],

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:ludic/shared/widgets/button.dart';
 
 class EntrarSalaView extends StatefulWidget {
   const EntrarSalaView({Key? key}) : super(key: key);

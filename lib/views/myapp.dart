@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/auth/auth_controller.dart';
+import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/views/EntrarSala/entrarSala.dart';
 import 'package:ludic/views/home_page/homePage.dart';
@@ -94,10 +95,10 @@ class AppWidget extends StatelessWidget {
       initialRoute: '/splash',
       routes: {
         '/splash': (context) => SplashPage(),
+        '/home': (context) => HomePage(user: ModalRoute.of(context)!.settings.arguments as UserModel),
         '/': (context) => LoginPage(),
         '/escolher-registro': (context) => EscolherRegistroView(),
         '/register': (context) => RegisterView(),
-        '/home': (context) => HomePage(),
         '/nova-sala': (context) => NovaSalaView(),
         '/entrar-sala': (context) => EntrarSalaView()
       },

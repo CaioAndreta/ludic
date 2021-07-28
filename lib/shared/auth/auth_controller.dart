@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController {
   final auth = FirebaseAuth.instance;
-  var _user = 'b';
+  var _user;
 
   get user => _user;
 
@@ -15,7 +15,7 @@ class AuthController {
     if (user != null) {
       final UserModel usuario;
       usuario = user;
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/home', arguments: user);
       return usuario;
     } else {
       Navigator.of(context).pushReplacementNamed('/');
@@ -26,18 +26,6 @@ class AuthController {
     final instance = await SharedPreferences.getInstance();
     await instance.setString('user', user.toJson());
     return;
-  }
-
-  e() async {
-    final instance = await SharedPreferences.getInstance();
-    final userInfo = instance.get('user') as String;
-    return userInfo;
-  }
-
-  Map<String, dynamic> getUser(BuildContext context) {
-    final map = e();
-    Map<String, dynamic> userzada = json.decode(map);
-    return userzada;
   }
 
   Future<void> currentUser(BuildContext context) async {

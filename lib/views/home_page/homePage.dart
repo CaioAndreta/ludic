@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ludic/shared/auth/auth_controller.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:ludic/views/home_page/widgets/HomeDrawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var authController = AuthController();
-    var usuario = authController.user;
+    final usuario = authController.getUser(context);
     var size = MediaQuery.of(context).size;
     final _firestore = FirebaseFirestore.instance;
     return DefaultTabController(
@@ -136,7 +135,7 @@ class _HomePageState extends State<HomePage> {
               height: size.height * 0.5,
               width: size.width * 0.5,
               color: Colors.red,
-              child: Text(usuario.toString()),
+              child: Center(child: Text('s')),
             )
           ])),
     );

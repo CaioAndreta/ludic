@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ludic/shared/auth/auth_controller.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';

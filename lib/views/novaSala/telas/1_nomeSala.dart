@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 
+// ignore: must_be_immutable
 class NomeSalaView extends StatefulWidget {
   TextEditingController? controller;
   NomeSalaView({Key? key, this.controller}) : super(key: key);
@@ -11,7 +12,6 @@ class NomeSalaView extends StatefulWidget {
 }
 
 class _NomeSalaViewState extends State<NomeSalaView> {
-  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;

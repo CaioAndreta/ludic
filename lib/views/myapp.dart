@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:ludic/shared/auth/auth_controller.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/views/EntrarSala/entrarSala.dart';
@@ -9,6 +8,7 @@ import 'package:ludic/views/novaSala/novaSala.dart';
 import 'package:ludic/views/register/escolherRegistro.dart';
 import 'package:ludic/views/login/login.dart';
 import 'package:ludic/views/register/register.dart';
+import 'package:ludic/views/sala/salaView.dart';
 import 'package:ludic/views/splash_screen/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
@@ -95,12 +95,14 @@ class AppWidget extends StatelessWidget {
       initialRoute: '/splash',
       routes: {
         '/splash': (context) => SplashPage(),
-        '/home': (context) => HomePage(user: ModalRoute.of(context)!.settings.arguments as UserModel),
+        '/home': (context) => HomePage(
+            user: ModalRoute.of(context)!.settings.arguments as UserModel),
         '/': (context) => LoginPage(),
         '/escolher-registro': (context) => EscolherRegistroView(),
         '/register': (context) => RegisterView(),
         '/nova-sala': (context) => NovaSalaView(),
-        '/entrar-sala': (context) => EntrarSalaView()
+        '/entrar-sala': (context) => EntrarSalaView(),
+        '/sala': (context) => SalaView()
       },
     );
   }

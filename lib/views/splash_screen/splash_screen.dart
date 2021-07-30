@@ -16,13 +16,16 @@ class SplashPage extends StatelessWidget {
         children: [
           Center(
               child: Container(
-            color: AppColors.primary,
+            color: AppColors.secondary,
           )),
           Center(
-              child: Text(
-            'LUDIC',
-            style: TextStyles.secondaryTitleText,
-          ))
+              child: Container(
+                height: 200,
+                width: 200,
+                child: Image(
+            image: AssetImage('assets/logo.png'),
+          ),
+              ))
         ],
       ),
     );

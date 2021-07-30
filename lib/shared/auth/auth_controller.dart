@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/user_model.dart';
@@ -86,7 +84,7 @@ class AuthController {
           email: auth.currentUser!.email,
           id: auth.currentUser!.uid);
       saveUser(user);
-      Navigator.of(context).pushNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/home', arguments: user);
     } on FirebaseAuthException catch (e, s) {
       captureErrors(context, e, s);
     }
@@ -101,6 +99,7 @@ class AuthController {
     final currUser = auth.currentUser;
     currUser!.updateDisplayName(name.toUpperCase().trim());
     final user = UserModel(name: name, email: email, id: currUser.uid);
+    authController.saveUser(user);
     authController.setUser(context, user);
   }
 
@@ -113,6 +112,7 @@ class AuthController {
     final currUser = auth.currentUser;
     currUser!.updateDisplayName(name.toUpperCase().trim());
     final user = UserModel(name: name, email: email, id: currUser.uid);
+    authController.saveUser(user);
     authController.setUser(context, user);
   }
 }

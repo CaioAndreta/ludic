@@ -1,5 +1,4 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ludic/shared/auth/auth_controller.dart';
@@ -7,7 +6,6 @@ import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/inputField.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterProfView extends StatefulWidget {
   const RegisterProfView({Key? key}) : super(key: key);

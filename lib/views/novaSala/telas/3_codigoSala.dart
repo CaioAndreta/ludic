@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:short_uuids/short_uuids.dart';
 
 // ignore: must_be_immutable
 class CodigoSalaView extends StatelessWidget {

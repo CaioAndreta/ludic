@@ -49,12 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 InputField(
-                  suffixIcon: Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: IconButton(
-                        icon: Icon(Icons.visibility, color: AppColors.primary),
-                        onPressed: () {}),
-                  ),
+            
                   icon: Icons.lock,
                   label: 'Senha',
                   controller: _passwordController,

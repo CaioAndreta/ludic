@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
@@ -19,7 +20,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final _firestore = FirebaseFirestore.instance;
+    double appBarHeight = size.height * 0.11;
+    final db = FirebaseFirestore.instance;
+    Map<String, String> map = {'${widget.user.id}': '${widget.user.name}'};
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -28,7 +31,10 @@ class _HomePageState extends State<HomePage> {
           drawerEnableOpenDragGesture: true,
           drawer: HomeDrawer(userInfo: widget.user),
           appBar: AppBar(
-              title: Text('LUDIC', style: TextStyles.primaryTitleText),
+              toolbarHeight: appBarHeight,
+              title: Container(
+                  height: appBarHeight * 1.3,
+                  child: Image(image: AssetImage('assets/logo.png'))),
               actions: [
                 PopupMenuButton(
                   color: AppColors.secondary,
@@ -37,16 +43,18 @@ class _HomePageState extends State<HomePage> {
                     PopupMenuItem(
                         child: ListTile(
                             onTap: () {
-                              Navigator.of(context)
-                                  .pushReplacementNamed('/nova-sala');
+                              Navigator.of(context).pushReplacementNamed(
+                                  '/nova-sala',
+                                  arguments: widget.user);
                             },
                             title: Text('Criar uma Sala de Aula',
                                 style: TextStyles.primaryHintText))),
                     PopupMenuItem(
                         child: ListTile(
                             onTap: () {
-                              Navigator.of(context)
-                                  .pushReplacementNamed('/entrar-sala');
+                              Navigator.of(context).pushReplacementNamed(
+                                  '/entrar-sala',
+                                  arguments: widget.user);
                             },
                             title: Text('Entrar em uma Sala de Aula',
                                 style: TextStyles.primaryHintText)))
@@ -62,9 +70,9 @@ class _HomePageState extends State<HomePage> {
               )),
           body: TabBarView(children: [
             StreamBuilder<QuerySnapshot>(
-                stream: _firestore
+                stream: db
                     .collection('salas')
-                    .where('alunos', arrayContains: widget.user.id)
+                    .where('alunos', arrayContains: map)
                     .orderBy('nome')
                     .snapshots(),
                 builder: (_, snapshot) {
@@ -82,14 +90,15 @@ class _HomePageState extends State<HomePage> {
                         return Container(
                           padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
                           height: 300,
-                          color: AppColors.secondary,
                           width: double.infinity,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: Card(
-                              elevation: 8,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushNamed('/sala');
+                              },
                               child: Container(
-                                color: AppColors.secondary,
+                                color: AppColors.primary,
                                 height: double.infinity,
                                 width: double.infinity,
                                 child: Column(
@@ -103,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                                           Center(
                                             child: Text(doc['nome'],
                                                 style: TextStyles
-                                                    .primaryTitleText),
+                                                    .secondaryTxtCodigoSala),
                                           ),
                                         ],
                                       ),

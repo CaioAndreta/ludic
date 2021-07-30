@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ludic/shared/auth/auth_controller.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
@@ -25,6 +24,7 @@ class _NovaSalaViewState extends State<NovaSalaView> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final user = ModalRoute.of(context)!.settings.arguments as UserModel;
     String codigoSala = uuid.generate();
     var db = FirebaseFirestore.instance;
     return Scaffold(
@@ -100,7 +100,7 @@ class _NovaSalaViewState extends State<NovaSalaView> {
                         'nome': nameSalaController.text,
                         'tarefas': tarefas,
                         'codigo': codigoSala,
-                        // 'professor': userInfo.name,
+                        'professor': user.name,
                         'alunos': []
                       });
                       ScaffoldMessenger.of(context)

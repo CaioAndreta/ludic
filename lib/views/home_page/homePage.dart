@@ -26,6 +26,12 @@ class _HomePageState extends State<HomePage> {
       'id': '${widget.user.id}',
       'name': '${widget.user.name}'
     };
+    var tarefas = db
+        .collection('salas')
+        .where('alunos', arrayContains: map)
+        .orderBy('nome')
+        .snapshots();
+        
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -73,11 +79,7 @@ class _HomePageState extends State<HomePage> {
               )),
           body: TabBarView(children: [
             StreamBuilder<QuerySnapshot>(
-                stream: db
-                    .collection('salas')
-                    .where('alunos', arrayContains: map)
-                    .orderBy('nome')
-                    .snapshots(),
+                stream: tarefas,
                 builder: (_, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
@@ -90,11 +92,6 @@ class _HomePageState extends State<HomePage> {
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (_, index) {
                         var doc = snapshot.data!.docs[index];
-                        var tarefas = db
-                            .collection('salas')
-                            .doc(doc['codigo'])
-                            .collection('tarefas')
-                            .snapshots();
                         return Container(
                           padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
                           height: 300,

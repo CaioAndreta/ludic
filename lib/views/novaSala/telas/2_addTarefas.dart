@@ -14,7 +14,6 @@ class AddTarefasView extends StatefulWidget {
 }
 
 class _AddTarefasViewState extends State<AddTarefasView> {
-  var selectedDate = DateTime.now();
   addTarefa(String name, String desc) {
     widget.tarefas.add({
       'nome': name,
@@ -38,10 +37,9 @@ class _AddTarefasViewState extends State<AddTarefasView> {
       floatingActionButton: ElevatedButton(
         child: Icon(Icons.add, color: AppColors.primary),
         style: ElevatedButton.styleFrom(
-          shape: CircleBorder(),
-          padding: EdgeInsets.all(20),
-          primary: AppColors.secondary,
-        ),
+            shape: CircleBorder(),
+            padding: EdgeInsets.all(20),
+            primary: AppColors.secondary),
         onPressed: () {
           final _formKey = GlobalKey<FormState>();
           showModalBottomSheet(

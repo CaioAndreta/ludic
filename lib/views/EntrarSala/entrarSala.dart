@@ -101,7 +101,8 @@ class _EntrarSalaViewState extends State<EntrarSalaView> {
                                   ),
                                   onPressed: () {
                                     Map<String, String> map = {
-                                      '${user.id}': '${user.name}'
+                                      'name': '${user.name}',
+                                      'id': '${user.id}',
                                     };
                                     db.collection("salas").doc(doc.id).update({
                                       'alunos': FieldValue.arrayUnion([map])

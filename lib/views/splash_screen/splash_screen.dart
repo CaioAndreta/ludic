@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/auth/auth_controller.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
-import 'package:ludic/shared/themes/app_textstyles.dart';
 
-class SplashPage extends StatelessWidget {
+class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  _SplashPageState createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> {
+  late Future<void> getCurrUser;
+  @override
+  void initState() {
     final authController = AuthController();
-    authController.currentUser(context);
+    getCurrUser = authController.currentUser(context);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondary,
       body: Stack(
@@ -20,12 +30,12 @@ class SplashPage extends StatelessWidget {
           )),
           Center(
               child: Container(
-                height: 200,
-                width: 200,
-                child: Image(
-            image: AssetImage('assets/logo.png'),
-          ),
-              ))
+            height: 200,
+            width: 200,
+            child: Image(
+              image: AssetImage('assets/logo.png'),
+            ),
+          ))
         ],
       ),
     );

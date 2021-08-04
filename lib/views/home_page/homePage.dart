@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:ludic/shared/models/sala_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
@@ -22,7 +22,10 @@ class _HomePageState extends State<HomePage> {
     var size = MediaQuery.of(context).size;
     double appBarHeight = size.height * 0.11;
     final db = FirebaseFirestore.instance;
-    Map<String, String> map = {'${widget.user.id}': '${widget.user.name}'};
+    Map<String, String> map = {
+      'id': '${widget.user.id}',
+      'name': '${widget.user.name}'
+    };
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -87,6 +90,11 @@ class _HomePageState extends State<HomePage> {
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (_, index) {
                         var doc = snapshot.data!.docs[index];
+                        var tarefas = db
+                            .collection('salas')
+                            .doc(doc['codigo'])
+                            .collection('tarefas')
+                            .snapshots();
                         return Container(
                           padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
                           height: 300,
@@ -95,29 +103,26 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(15),
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.of(context).pushNamed('/sala');
+                                Sala sala = Sala(
+                                  alunos: doc['alunos'],
+                                  codigo: doc['codigo'],
+                                  nome: doc['nome'],
+                                  professor: doc['professor'],
+                                );
+                                Navigator.of(context)
+                                    .pushNamed('/sala', arguments: sala);
                               },
                               child: Container(
                                 color: AppColors.primary,
                                 height: double.infinity,
                                 width: double.infinity,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(height: 20),
-                                    Container(
-                                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                      child: Column(
-                                        children: [
-                                          Center(
-                                            child: Text(doc['nome'],
-                                                style: TextStyles
-                                                    .secondaryTxtCodigoSala),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  child: ListTile(
+                                    title: Text(doc['nome'],
+                                        style:
+                                            TextStyles.secondaryTxtCodigoSala),
+                                  ),
                                 ),
                               ),
                             ),

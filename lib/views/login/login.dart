@@ -49,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 InputField(
-            
                   icon: Icons.lock,
                   label: 'Senha',
                   controller: _passwordController,
@@ -69,7 +68,9 @@ class _LoginPageState extends State<LoginPage> {
                     final form = _formKey.currentState!;
                     if (form.validate()) {
                       final authController = AuthController();
-                      authController.userLogin(context, _emailController.text.trim(),
+                      authController.userLogin(
+                          context,
+                          _emailController.text.trim(),
                           _passwordController.text);
                     }
                   },

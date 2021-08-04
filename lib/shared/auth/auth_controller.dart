@@ -16,7 +16,7 @@ class AuthController {
       Navigator.of(context).pushReplacementNamed('/home', arguments: user);
       return usuario;
     } else {
-      Navigator.of(context).pushReplacementNamed('/');
+      Navigator.of(context).pushReplacementNamed('/login');
     }
   }
 
@@ -27,8 +27,8 @@ class AuthController {
   }
 
   Future<void> currentUser(BuildContext context) async {
-    final instance = await SharedPreferences.getInstance();
     await Future.delayed(Duration(seconds: 2));
+    final instance = await SharedPreferences.getInstance();
     if (instance.containsKey('user')) {
       final json = instance.get('user') as String;
       setUser(context, UserModel.fromJson(json));

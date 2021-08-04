@@ -56,7 +56,7 @@ class HomeDrawer extends StatelessWidget {
                         onTap: () async {
                           await FirebaseAuth.instance.signOut();
                           Navigator.of(context)
-                              .pushNamedAndRemoveUntil('/', (route) => false);
+                              .pushNamedAndRemoveUntil('/login', (route) => false);
                           SharedPreferences preferences =
                               await SharedPreferences.getInstance();
                           preferences.remove('user');

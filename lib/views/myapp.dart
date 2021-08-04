@@ -97,7 +97,7 @@ class AppWidget extends StatelessWidget {
         '/splash': (context) => SplashPage(),
         '/home': (context) => HomePage(
             user: ModalRoute.of(context)!.settings.arguments as UserModel),
-        '/': (context) => LoginPage(),
+        '/login': (context) => LoginPage(),
         '/escolher-registro': (context) => EscolherRegistroView(),
         '/register': (context) => RegisterView(),
         '/nova-sala': (context) => NovaSalaView(),

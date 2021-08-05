@@ -101,6 +101,7 @@ class AuthController {
     final user = UserModel(name: name, email: email, id: currUser.uid);
     authController.saveUser(user);
     authController.setUser(context, user);
+    Navigator.popUntil(context, ModalRoute.withName('/login'));
   }
 
   profRegister(BuildContext context,
@@ -114,5 +115,6 @@ class AuthController {
     final user = UserModel(name: name, email: email, id: currUser.uid);
     authController.saveUser(user);
     authController.setUser(context, user);
+    Navigator.popUntil(context, ModalRoute.withName('/login'));
   }
 }

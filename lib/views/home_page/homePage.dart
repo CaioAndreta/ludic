@@ -4,7 +4,7 @@ import 'package:ludic/shared/models/sala_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:ludic/views/home_page/widgets/HomeDrawer.dart';
+import 'package:ludic/shared/widgets/HomeDrawer.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
@@ -22,16 +22,12 @@ class _HomePageState extends State<HomePage> {
     var size = MediaQuery.of(context).size;
     double appBarHeight = size.height * 0.11;
     final db = FirebaseFirestore.instance;
-    Map<String, String> map = {
-      'id': '${widget.user.id}',
-      'name': '${widget.user.name}'
-    };
     var tarefas = db
         .collection('salas')
-        .where('alunos', arrayContains: map)
+        .where('alunos', arrayContains: widget.user.email)
         .orderBy('nome')
         .snapshots();
-        
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -93,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (_, index) {
                         var doc = snapshot.data!.docs[index];
                         return Container(
-                          padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
+                          padding: EdgeInsets.all(5),
                           height: 300,
                           width: double.infinity,
                           child: ClipRRect(
@@ -101,7 +97,6 @@ class _HomePageState extends State<HomePage> {
                             child: GestureDetector(
                               onTap: () {
                                 Sala sala = Sala(
-                                  alunos: doc['alunos'],
                                   codigo: doc['codigo'],
                                   nome: doc['nome'],
                                   professor: doc['professor'],

@@ -108,17 +108,22 @@ class _SalaViewState extends State<SalaView> {
                         });
                   }),
             ),
-            StreamBuilder<DocumentSnapshot>(
-                stream: db.collection('salas').doc(sala.codigo).snapshots(),
+            StreamBuilder<QuerySnapshot>(
+                stream: db
+                    .collection('salas')
+                    .doc(sala.codigo)
+                    .collection('alunos')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return new Text("Loading");
+                    return Center(child: CircularProgressIndicator());
                   }
-                  final doc = snapshot.data;
                   return ListView.builder(
-                    itemBuilder: (_, index) {
-                    return ListTile(title: Text(doc!["alunos"][index]['name']));
-                  });
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (_, index) {
+                        var doc = snapshot.data!.docs[index];
+                        return ListTile(title: Text(doc['nome']));
+                      });
                 })
           ]),
           floatingActionButton: ElevatedButton(

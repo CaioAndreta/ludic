@@ -100,12 +100,17 @@ class _EntrarSalaViewState extends State<EntrarSalaView> {
                                     style: TextStyle(color: AppColors.primary),
                                   ),
                                   onPressed: () {
-                                    Map<String, String> map = {
-                                      'name': '${user.name}',
-                                      'id': '${user.id}',
-                                    };
+                                    db
+                                        .collection('salas')
+                                        .doc(doc.id)
+                                        .collection('alunos')
+                                        .doc(user.id)
+                                        .set({
+                                      'nome': user.name,
+                                      'email': user.email
+                                    });
                                     db.collection("salas").doc(doc.id).update({
-                                      'alunos': FieldValue.arrayUnion([map])
+                                      'alunos': FieldValue.arrayUnion([user.email])
                                     });
                                     Navigator.of(context).pop();
                                   }),

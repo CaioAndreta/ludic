@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Sala {
   final auth = FirebaseAuth.instance;
-  List alunos = [];
   String codigo = '';
   String nome = '';
   String professor = '';
@@ -12,7 +11,6 @@ class Sala {
   Sala(
       {required this.nome,
       required this.professor,
-      required this.alunos,
       required this.codigo,
       this.docId = ''});
 

@@ -53,63 +53,73 @@ class _SalaViewState extends State<SalaView> {
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
-          backgroundColor: AppColors.secondary,
-          appBar: AppBar(backgroundColor: AppColors.secondaryDark),
+          backgroundColor: AppColors.secondaryDark,
+          appBar: AppBar(),
           body: TabBarView(children: [
             Form(
-                child: StreamBuilder(
-                    stream: db
-                        .collection('salas')
-                        .doc('DyMCPDM')
-                        .collection('tarefas')
-                        .snapshots(),
-                    builder:
-                        (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(
-                            child: CircularProgressIndicator(
-                                color: AppColors.primary));
-                      }
-                      return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (_, index) {
-                            var doc = snapshot.data!.docs[index];
-                            return Container(
-                              padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
-                              width: double.infinity,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: Container(
-                                  color: AppColors.secondaryDark,
-                                  child: ListTile(
-                                    trailing: PopupMenuButton(
-                                      color: AppColors.secondary,
-                                      itemBuilder: (_) => [
-                                        PopupMenuItem(
-                                            child: ListTile(
-                                                leading: Icon(Icons.delete,
-                                                    color: AppColors.delete),
-                                                title: Text('Apagar',
-                                                    style: TextStyle(
-                                                        color:
-                                                            AppColors.delete)),
-                                                onTap: () {
-                                                  deleteTarefa(doc['nome']);
-                                                  Navigator.pop(context);
-                                                })),
-                                      ],
-                                    ),
-                                    title: Text(doc['nome'],
-                                        style: TextStyles.blackTitleText),
-                                    subtitle: Text(doc['descricao'],
-                                        style: TextStyles.blackHintText),
+              child: StreamBuilder(
+                  stream: db
+                      .collection('salas')
+                      .doc(sala.codigo)
+                      .collection('tarefas')
+                      .snapshots(),
+                  builder: (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                          child: CircularProgressIndicator(
+                              color: AppColors.primary));
+                    }
+                    return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (_, index) {
+                          var doc = snapshot.data!.docs[index];
+                          return Container(
+                            padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
+                            width: double.infinity,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Container(
+                                color: AppColors.secondary,
+                                child: ListTile(
+                                  trailing: PopupMenuButton(
+                                    color: AppColors.secondary,
+                                    itemBuilder: (_) => [
+                                      PopupMenuItem(
+                                          child: ListTile(
+                                              leading: Icon(Icons.delete,
+                                                  color: AppColors.delete),
+                                              title: Text('Apagar',
+                                                  style: TextStyle(
+                                                      color: AppColors.delete)),
+                                              onTap: () {
+                                                deleteTarefa(doc['nome']);
+                                                Navigator.pop(context);
+                                              })),
+                                    ],
                                   ),
+                                  title: Text(doc['nome'],
+                                      style: TextStyles.blackTitleText),
+                                  subtitle: Text(doc['descricao'],
+                                      style: TextStyles.blackHintText),
                                 ),
                               ),
-                            );
-                          });
-                    })),
-            Container(color: AppColors.dark)
+                            ),
+                          );
+                        });
+                  }),
+            ),
+            StreamBuilder<DocumentSnapshot>(
+                stream: db.collection('salas').doc(sala.codigo).snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return new Text("Loading");
+                  }
+                  final doc = snapshot.data;
+                  return ListView.builder(
+                    itemBuilder: (_, index) {
+                    return ListTile(title: Text(doc!["alunos"][index]['name']));
+                  });
+                })
           ]),
           floatingActionButton: ElevatedButton(
             child: Icon(Icons.add, color: AppColors.secondary),

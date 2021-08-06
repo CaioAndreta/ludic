@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    double appBarHeight = size.height * 0.11;
+    double appBarHeight = size.height * 0.09;
     final db = FirebaseFirestore.instance;
     var tarefas = db
         .collection('salas')
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
               toolbarHeight: appBarHeight,
               title: Container(
-                  height: appBarHeight * 1.3,
+                  height: appBarHeight * 0.45,
                   child: Image(image: AssetImage('assets/logo.png'))),
               actions: [
                 PopupMenuButton(

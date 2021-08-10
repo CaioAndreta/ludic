@@ -20,7 +20,6 @@ class NovaSalaView extends StatefulWidget {
 class _NovaSalaViewState extends State<NovaSalaView> {
   var nameSalaController = TextEditingController();
   List<Map<String, String>> tarefas = [];
-  Map map = {'nome': 'caio', 'idade': 20};
   var uuid = ShortUuid.init();
   int index = 0;
   final _formKey = GlobalKey<FormState>();
@@ -29,6 +28,7 @@ class _NovaSalaViewState extends State<NovaSalaView> {
     final user = ModalRoute.of(context)!.settings.arguments as UserModel;
     String codigoSala = randomAlphaNumeric(7);
     var db = FirebaseFirestore.instance;
+
     return Scaffold(
         backgroundColor: AppColors.primary,
         appBar: AppBar(
@@ -103,7 +103,7 @@ class _NovaSalaViewState extends State<NovaSalaView> {
                         'nome': nameSalaController.text,
                         'codigo': codigoSala,
                         'professor': user.name,
-                        'alunos' : []
+                        'alunos': [user.email]
                       });
                       tarefas.forEach((element) {
                         db

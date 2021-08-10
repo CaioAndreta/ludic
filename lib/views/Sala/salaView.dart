@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/sala_model.dart';
@@ -9,6 +10,8 @@ import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/inputField.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:ludic/views/Sala/telas/listaAlunos.dart';
+import 'package:ludic/views/Sala/telas/listaTarefas.dart';
 import 'package:path/path.dart';
 
 class SalaView extends StatefulWidget {
@@ -23,11 +26,9 @@ class _SalaViewState extends State<SalaView> {
   File? file;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _descController = TextEditingController();
-
+  UploadTask? task;
   @override
   Widget build(BuildContext context) {
-    final fileName =
-        file != null ? basename(file!.path) : 'Nenhum arquivo selecionado';
     final sala = ModalRoute.of(context)!.settings.arguments as Sala;
     final db = FirebaseFirestore.instance;
     var size = MediaQuery.of(context).size;
@@ -47,183 +48,155 @@ class _SalaViewState extends State<SalaView> {
       });
     }
 
-    deleteTarefa(tarNome) {
-      db
-          .collection('salas')
-          .doc(sala.codigo)
-          .collection('tarefas')
-          .doc(tarNome)
-          .delete();
-      setState(() {});
-    }
+    uploadStatus(UploadTask task) => StreamBuilder<TaskSnapshot>(
+          stream: task.snapshotEvents,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final snap = snapshot.data!;
+              final progress = snap.bytesTransferred / snap.totalBytes;
+              final percentage = (progress * 100).toStringAsFixed(2);
+              return Text('$percentage%', style: TextStyles.blackHintText);
+            } else {
+              return Container();
+            }
+          },
+        );
 
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
-        backgroundColor: AppColors.secondaryDark,
+        backgroundColor: AppColors.secondary,
         appBar: AppBar(),
         body: TabBarView(children: [
-          Form(
-            child: StreamBuilder(
-                stream: db
-                    .collection('salas')
-                    .doc(sala.codigo)
-                    .collection('tarefas')
-                    .snapshots(),
-                builder: (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                        child: CircularProgressIndicator(
-                            color: AppColors.primary));
-                  }
-                  return ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (_, index) {
-                        var doc = snapshot.data!.docs[index];
-                        return Container(
-                          padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
-                          width: double.infinity,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Container(
-                              color: AppColors.secondary,
-                              child: ListTile(
-                                trailing: PopupMenuButton(
-                                  color: AppColors.secondary,
-                                  itemBuilder: (_) => [
-                                    PopupMenuItem(
-                                        child: ListTile(
-                                            leading: Icon(Icons.delete,
-                                                color: AppColors.delete),
-                                            title: Text('Apagar',
-                                                style: TextStyle(
-                                                    color: AppColors.delete)),
-                                            onTap: () {
-                                              deleteTarefa(doc['nome']);
-                                              Navigator.pop(context);
-                                            })),
-                                  ],
-                                ),
-                                title: Text(doc['nome'],
-                                    style: TextStyles.blackTitleText),
-                                subtitle: Text(doc['descricao'],
-                                    style: TextStyles.blackHintText),
-                              ),
-                            ),
-                          ),
-                        );
-                      });
-                }),
-          ),
-          StreamBuilder<QuerySnapshot>(
-              stream: db
-                  .collection('salas')
-                  .doc(sala.codigo)
-                  .collection('alunos')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (_, index) {
-                      var doc = snapshot.data!.docs[index];
-                      return ListTile(title: Text(doc['nome']));
-                    });
-              }),
-          Column(
-            children: [
-              Button(
-                label: 'Selecione o Arquivo',
-                onPressed: () async {
-                  final result =
-                      await FilePicker.platform.pickFiles(allowMultiple: false);
-                  if (result == null) return;
-                  final path = result.files.single.path!;
-                  setState(() => file = File(path));
-                },
+          Scaffold(
+            backgroundColor: AppColors.secondaryDark,
+            floatingActionButton: ElevatedButton(
+              child: Icon(Icons.add, color: AppColors.secondary),
+              style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+                padding: EdgeInsets.all(20),
+                primary: AppColors.primary,
               ),
-              Button(
-                label: 'Upload de Arquivo',
-                onPressed: () async {
-                  if (file == null) return;
-                  final fileName = basename(file!.path);
-                  final destination = 'files/$fileName';
+              onPressed: () {
+                final _formKey = GlobalKey<FormState>();
+                _descController = TextEditingController();
+                _nameController = TextEditingController();
+                showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => StatefulBuilder(builder:
+                            (BuildContext context, StateSetter setModalState) {
+                          final fileName = file != null
+                              ? basename(file!.path)
+                              : 'Nenhum arquivo selecionado';
+                          Future selectFile() async {
+                            final result =
+                                await FilePicker.platform.pickFiles();
+                            if (result == null) return;
+                            final path = result.files.single.path!;
+                            setModalState(() {
+                              file = File(path);
+                            });
+                          }
 
-                  uploadFile(destination, file!);
-                },
-              )
-            ],
-          )
-        ]),
-        floatingActionButton: ElevatedButton(
-          child: Icon(Icons.add, color: AppColors.secondary),
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            padding: EdgeInsets.all(20),
-            primary: AppColors.primary,
-          ),
-          onPressed: () {
-            final _formKey = GlobalKey<FormState>();
-            _descController = TextEditingController();
-            _nameController = TextEditingController();
-            showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (context) => Container(
-                      height: size.height * 0.8,
-                      decoration: BoxDecoration(
-                          color: AppColors.secondary,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(25.0),
-                              topRight: Radius.circular(25.0))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Form(
-                            key: _formKey,
+                          UploadTask? dbUpload(String destination, File file) {
+                            try {
+                              final ref =
+                                  FirebaseStorage.instance.ref(destination);
+                              return ref.putFile(file);
+                            } on FirebaseException catch (e) {
+                              return null;
+                            }
+                          }
+
+                          Future uploadFile() async {
+                            if (file == null) return;
+                            final fileName = basename(file!.path);
+                            final destination = '${sala.codigo}/$fileName';
+                            task = dbUpload(destination, file!);
+                            setModalState(() {});
+                            if (task == null) return;
+                            final snapshot = await task!.whenComplete(() => {});
+                            final urlDownload =
+                                await snapshot.ref.getDownloadURL();
+                            print(urlDownload);
+                          }
+
+                          return Container(
+                            height: size.height * 0.8,
+                            decoration: BoxDecoration(
+                                color: AppColors.secondaryDark,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(25.0),
+                                    topRight: Radius.circular(25.0))),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.all(20.0),
-                                  child: Text('Insira as informações da tarefa',
-                                      style: TextStyles.blackTitleText),
+                                Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(20.0),
+                                        child: Text(
+                                            'Insira as informações da tarefa',
+                                            style: TextStyles.blackTitleText),
+                                      ),
+                                      InputField(
+                                          validator: (value) {
+                                            if (value.length < 4) {
+                                              return 'Insira um nome de pelo menos 4 caracteres';
+                                            }
+                                            return null;
+                                          },
+                                          icon: Icons.tag,
+                                          label: 'Nome',
+                                          controller: _nameController),
+                                      InputField(
+                                        label: 'Descrição',
+                                        icon: Icons.text_snippet,
+                                        controller: _descController,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Button(
+                                            label: 'Selecione o Arquivo',
+                                            onPressed: selectFile,
+                                          ),
+                                          Text(fileName,
+                                              style: TextStyles.blackHintText),
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                InputField(
-                                    validator: (value) {
-                                      if (value.length < 4) {
-                                        return 'Insira um nome de pelo menos 4 caracteres';
-                                      }
-                                      return null;
-                                    },
-                                    icon: Icons.tag,
-                                    label: 'Nome',
-                                    controller: _nameController),
-                                InputField(
-                                  label: 'Descrição',
-                                  icon: Icons.text_snippet,
-                                  controller: _descController,
-                                ),
+                                task != null
+                                    ? uploadStatus(task!)
+                                    : Container(),
+                                Button(
+                                  label: 'Adicionar',
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      addTarefa(_nameController.text,
+                                          _descController.text);
+                                      await uploadFile();
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                )
                               ],
                             ),
-                          ),
-                          Button(
-                            label: 'Adicionar',
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                addTarefa(
-                                    _nameController.text, _descController.text);
-                                Navigator.pop(context);
-                              }
-                            },
-                          )
-                        ],
-                      ),
-                    ));
-          },
-        ),
+                          );
+                        }));
+              },
+            ),
+            body: Form(
+              child: ListaTarefas(db: db, sala: sala),
+            ),
+          ),
+          ListaAlunos(db: db, sala: sala),
+        ]),
         bottomNavigationBar: Material(
           color: AppColors.secondaryDark,
           child: TabBar(
@@ -243,24 +216,11 @@ class _SalaViewState extends State<SalaView> {
                   height: size.height * 0.1,
                   child: Center(
                       child: Text('Sala', style: TextStyles.primaryTitleText))),
-              Container(
-                  height: size.height * 0.1,
-                  child: Center(
-                      child:
-                          Text('Teste', style: TextStyles.primaryTitleText))),
             ],
           ),
         ),
       ),
     );
   }
-
-  static UploadTask? uploadFile(String destination, File file) {
-    try {
-      final ref = FirebaseStorage.instance.ref(destination);
-      return ref.putFile(file);
-    } on FirebaseException catch (e) {
-      return null;
-    }
-  }
 }
+

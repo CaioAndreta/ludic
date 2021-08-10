@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/views/EntrarSala/entrarSala.dart';
@@ -10,6 +11,7 @@ import 'package:ludic/views/login/login.dart';
 import 'package:ludic/views/register/register.dart';
 import 'package:ludic/views/sala/salaView.dart';
 import 'package:ludic/views/splash_screen/splash_screen.dart';
+import 'package:ludic/views/tarefa/tarefa_view.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({
@@ -107,7 +109,9 @@ class _AppWidgetState extends State<AppWidget> {
         '/register': (context) => RegisterView(),
         '/nova-sala': (context) => NovaSalaView(),
         '/entrar-sala': (context) => EntrarSalaView(),
-        '/sala': (context) => SalaView()
+        '/sala': (context) => SalaView(),
+        '/tarefa': (context) => TarefaView(
+            tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa)
       },
     );
   }

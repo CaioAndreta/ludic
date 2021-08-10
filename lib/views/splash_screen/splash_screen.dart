@@ -30,8 +30,8 @@ class _SplashPageState extends State<SplashPage> {
           )),
           Center(
               child: Container(
-            height: 200,
-            width: 200,
+            height: 100,
+            width: 100,
             child: Image(
               image: AssetImage('assets/logo.png'),
             ),

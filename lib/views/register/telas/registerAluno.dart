@@ -88,6 +88,7 @@ class _RegisterAlunoViewState extends State<RegisterAlunoView> {
                           email: _emailController.text,
                           password: _passwordController.text,
                           name: _nameController.text);
+                    Navigator.popUntil(context, ModalRoute.withName('/login'));
                   }),
             ],
           ),

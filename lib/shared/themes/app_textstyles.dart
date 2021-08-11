@@ -13,7 +13,7 @@ class TextStyles {
   static final blackTitleText =
       GoogleFonts.roboto(color: AppColors.dark, fontSize: 24);
   static final blackHintText =
-      GoogleFonts.roboto(color: AppColors.dark, fontSize: 16);
+      GoogleFonts.roboto(color: Color(0xff525252), fontSize: 16);
   static final secondaryHintText =
       GoogleFonts.roboto(color: AppColors.secondary);
   static final secondaryTxtCodigoSala =

@@ -31,7 +31,7 @@ class _SalaViewState extends State<SalaView> {
   Widget build(BuildContext context) {
     final sala = ModalRoute.of(context)!.settings.arguments as Sala;
     final db = FirebaseFirestore.instance;
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     addTarefa(String name, String desc) {
       tarefas.add({
         'nome': name,

@@ -110,11 +110,12 @@ class AuthController {
       required String name}) async {
     final authController = AuthController();
     auth.createUserWithEmailAndPassword(email: email, password: password);
+    auth.signInWithEmailAndPassword(email: email, password: password);
     final currUser = auth.currentUser;
     currUser!.updateDisplayName(name.toUpperCase().trim());
     final user = UserModel(name: name, email: email, id: currUser.uid);
     authController.saveUser(user);
     authController.setUser(context, user);
-    Navigator.popUntil(context, ModalRoute.withName('/login'));
+    Navigator.popUntil(context, ModalRoute.withName('/home'));
   }
 }

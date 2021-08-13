@@ -75,6 +75,7 @@ class _AppWidgetState extends State<AppWidget> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+
           canvasColor: AppColors.secondary,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
               backgroundColor: AppColors.primary,

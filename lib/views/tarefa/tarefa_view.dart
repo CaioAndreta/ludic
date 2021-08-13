@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/firebaseFile.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TarefaView extends StatefulWidget {
   const TarefaView({Key? key, required this.tarefa}) : super(key: key);
@@ -17,6 +15,7 @@ class TarefaView extends StatefulWidget {
 }
 
 class _TarefaViewState extends State<TarefaView> {
+  var storage = FirebaseStorage.instance;
   late Future<List<FirebaseFile>> futureFiles;
   Future<List<String>> _getDownloadLinks(List<Reference> refs) =>
       Future.wait(refs.map((ref) => ref.getDownloadURL()).toList());
@@ -40,16 +39,9 @@ class _TarefaViewState extends State<TarefaView> {
         .toList();
   }
 
-  Future downloadFile(Reference ref) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/${ref.name}');
-
-    await ref.writeToFile(file);
-  }
-
   void initState() {
     super.initState();
-    futureFiles = listAll('/QPOWBJE');
+    futureFiles = listAll(widget.tarefa.path);
   }
 
   @override
@@ -86,7 +78,7 @@ class _TarefaViewState extends State<TarefaView> {
                   Container(
                       padding: EdgeInsets.symmetric(vertical: 8),
                       margin: EdgeInsets.only(bottom: 10),
-                      child: Text(widget.tarefa.nome,
+                      child: Text(widget.tarefa.descricao,
                           style: TextStyles.blackHintText)),
                   Text(
                     'Arquivos:',
@@ -94,6 +86,7 @@ class _TarefaViewState extends State<TarefaView> {
                   ),
                   Container(
                     child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: files.length,
                         itemBuilder: (context, index) {
@@ -103,12 +96,10 @@ class _TarefaViewState extends State<TarefaView> {
                             trailing: IconButton(
                               icon: Icon(Icons.download),
                               onPressed: () async {
-                                await downloadFile(file.ref);
-                                ScaffoldMessenger.of(context)
-                                  ..removeCurrentSnackBar()
-                                  ..showSnackBar(SnackBar(
-                                      content: Text(
-                                          'Arquivo baixado com sucesso!')));
+                                Future openFile() async {
+                                  await launch(file.url);
+                                }
+                                await openFile();
                               },
                             ),
                           );

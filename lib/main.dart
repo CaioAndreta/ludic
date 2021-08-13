@@ -1,3 +1,4 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,11 @@ class AppFirebase extends StatefulWidget {
 }
 
 class _AppFirebaseState extends State<AppFirebase> {
+  Future<void> appCheck() async {
+    await FirebaseAppCheck.instance
+        .activate(webRecaptchaSiteKey: 'recaptcha-v3-site-key');
+  }
+
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   void initState() {
@@ -38,6 +44,7 @@ class _AppFirebaseState extends State<AppFirebase> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
+          appCheck();
           return GestureDetector(
             child: AppWidget(),
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

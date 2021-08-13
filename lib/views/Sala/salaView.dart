@@ -113,14 +113,11 @@ class _SalaViewState extends State<SalaView> {
                           Future uploadFile() async {
                             if (file == null) return;
                             final fileName = basename(file!.path);
-                            final destination = '${sala.codigo}/$fileName';
+                            final destination =
+                                '${sala.codigo}/${_nameController.text}/$fileName';
                             task = dbUpload(destination, file!);
                             setModalState(() {});
                             if (task == null) return;
-                            final snapshot = await task!.whenComplete(() => {});
-                            final urlDownload =
-                                await snapshot.ref.getDownloadURL();
-                            print(urlDownload);
                           }
 
                           return Container(
@@ -223,4 +220,3 @@ class _SalaViewState extends State<SalaView> {
     );
   }
 }
-

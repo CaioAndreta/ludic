@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/user_model.dart';
@@ -5,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController {
   final auth = FirebaseAuth.instance;
+  final db = FirebaseFirestore.instance;
   var _user;
 
   get user => _user;
@@ -98,12 +100,18 @@ class AuthController {
       required String password,
       required String name}) async {
     try {
+      name = name.toUpperCase().trim();
       final authController = AuthController();
-      auth.createUserWithEmailAndPassword(email: email, password: password);
+      await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       await auth.signInWithEmailAndPassword(email: email, password: password);
       final currUser = auth.currentUser;
-      currUser!.updateDisplayName(name.toUpperCase().trim());
+      currUser!.updateDisplayName(name);
       final user = UserModel(name: name, email: email, id: currUser.uid);
+      db
+          .collection('usuarios')
+          .doc(email)
+          .set({'nome': name, 'email': email, 'isTeacher': false});
       authController.saveUser(user);
       authController.setUser(context, user);
       Navigator.popUntil(context, ModalRoute.withName('/home'));
@@ -117,12 +125,18 @@ class AuthController {
       required String password,
       required String name}) async {
     try {
+      name = name.toUpperCase().trim();
       final authController = AuthController();
-      auth.createUserWithEmailAndPassword(email: email, password: password);
+      await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       await auth.signInWithEmailAndPassword(email: email, password: password);
       final currUser = auth.currentUser;
-      currUser!.updateDisplayName(name.toUpperCase().trim());
+      currUser!.updateDisplayName(name);
       final user = UserModel(name: name, email: email, id: currUser.uid);
+      db
+          .collection('usuarios')
+          .doc(email)
+          .set({'nome': name, 'email': email, 'isTeacher': true});
       authController.saveUser(user);
       authController.setUser(context, user);
       Navigator.popUntil(context, ModalRoute.withName('/home'));

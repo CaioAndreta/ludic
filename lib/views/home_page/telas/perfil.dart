@@ -15,7 +15,7 @@ class Perfil extends StatelessWidget {
   Widget build(BuildContext context) {
     int xpAtual = 30;
     return Container(
-      color: AppColors.dark,
+      color: AppColors.secondary,
       height: double.infinity,
       width: double.infinity,
       child: Column(
@@ -23,12 +23,10 @@ class Perfil extends StatelessWidget {
           Container(
             margin: EdgeInsets.all(10),
             height: 200,
-            color: AppColors.dark,
             child: Column(
               children: [
                 Expanded(
                     child: Container(
-                      // color: Colors.yellowAccent,
                       child: CircleAvatar(),
                       width: double.infinity,
                     ),
@@ -36,10 +34,9 @@ class Perfil extends StatelessWidget {
                 Expanded(
                   child: Container(
                       width: double.infinity,
-                      // color: Colors.red,
                       child: Center(
                         child: Text('${userInfo.user.name}',
-                            style: TextStyles.secondaryTitleText),
+                            style: TextStyles.blackHintText),
                       )),
                   flex: 1,
                 ),
@@ -63,7 +60,7 @@ class Perfil extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 30),
                 child: Text(
                   '$xpAtual/100 XP',
-                  style: TextStyles.secondaryHintText,
+                  style: TextStyles.blackHintText,
                 ),
               ),
               Container(
@@ -72,15 +69,17 @@ class Perfil extends StatelessWidget {
                 width: double.infinity,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: Container(
-                    color: AppColors.secondary,
-                    height: double.infinity,
-                    width: double.infinity,
+                  child: Card(
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      child: ListTile(
-                        title: Text('Conquistas',
-                            style: TextStyles.primaryHintText),
+                      color: AppColors.secondaryDark,
+                      height: double.infinity,
+                      width: double.infinity,
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: ListTile(
+                          title: Text('Conquistas',
+                              style: TextStyles.primaryHintText),
+                        ),
                       ),
                     ),
                   ),

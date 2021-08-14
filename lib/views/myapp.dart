@@ -79,7 +79,6 @@ class _AppWidgetState extends State<AppWidget> {
       },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          accentColor: AppColors.primary,
           canvasColor: AppColors.secondary,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
               backgroundColor: AppColors.primary,
@@ -123,16 +122,8 @@ class _AppWidgetState extends State<AppWidget> {
 }
 
 class AppScrollBehavior extends ScrollBehavior {
-  ScrollPhysics getScrollPhysics(BuildContext context) {
-    switch (getPlatform(context)) {
-      case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
-      case TargetPlatform.android:
-        return const BouncingScrollPhysics();
-      case TargetPlatform.fuchsia:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
-        return const ClampingScrollPhysics();
-    }
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
   }
 }

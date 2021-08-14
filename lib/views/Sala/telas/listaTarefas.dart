@@ -53,8 +53,9 @@ class _ListaTarefasState extends State<ListaTarefas> {
                     onTap: () {
                       String tarNome = doc['nome'];
                       String tarDesc = doc['descricao'];
-                      String tarPath = '${widget.sala.codigo}/${tarNome}';
-                      Tarefa tarefa = Tarefa(nome: tarNome, descricao: tarDesc, path: tarPath);
+                      String tarPath = '${widget.sala.codigo}/$tarNome';
+                      Tarefa tarefa = Tarefa(
+                          nome: tarNome, descricao: tarDesc, path: tarPath);
                       Navigator.of(context)
                           .pushNamed('/tarefa', arguments: tarefa);
                     },

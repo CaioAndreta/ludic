@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:ludic/shared/models/sala_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/HomeDrawer.dart';
+import 'package:ludic/views/home_page/telas/perfil.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
@@ -84,8 +86,6 @@ class _HomePageState extends State<HomePage> {
                   builder: (_, snapshot) {
                     if (!snapshot.hasData) {
                       return Center(
-                          heightFactor: size.height,
-                          widthFactor: size.width,
                           child: CircularProgressIndicator(
                               color: AppColors.primary));
                     }
@@ -127,18 +127,7 @@ class _HomePageState extends State<HomePage> {
                           );
                         });
                   }),
-              Container(
-                  height: size.height * 0.5,
-                  width: size.width * 0.5,
-                  color: AppColors.dark,
-                  child: Center(
-                      child: Column(
-                    children: [
-                      Text('${widget.user.name}'),
-                      Text('${widget.user.email}'),
-                      Text('${widget.user.id}'),
-                    ],
-                  ))),
+              Perfil(userInfo: widget),
             ]),
           )),
     );

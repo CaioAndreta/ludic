@@ -67,6 +67,9 @@ class AuthController {
     } else if (e.code == 'wrong-password') {
       String erroMsg = 'Email ou senha informados estão incorretos';
       showPopUp(context, erroMsg);
+    } else if (e.code == 'email-already-in-use') {
+      String erroMsg = 'Este e-mail já está em uso';
+      showPopUp(context, erroMsg);
     } else {
       return null;
     }
@@ -94,28 +97,37 @@ class AuthController {
       {required String email,
       required String password,
       required String name}) async {
-    final authController = AuthController();
-    auth.createUserWithEmailAndPassword(email: email, password: password);
-    final currUser = auth.currentUser;
-    currUser!.updateDisplayName(name.toUpperCase().trim());
-    final user = UserModel(name: name, email: email, id: currUser.uid);
-    authController.saveUser(user);
-    authController.setUser(context, user);
-    Navigator.popUntil(context, ModalRoute.withName('/login'));
+    try {
+      final authController = AuthController();
+      auth.createUserWithEmailAndPassword(email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+      final currUser = auth.currentUser;
+      currUser!.updateDisplayName(name.toUpperCase().trim());
+      final user = UserModel(name: name, email: email, id: currUser.uid);
+      authController.saveUser(user);
+      authController.setUser(context, user);
+      Navigator.popUntil(context, ModalRoute.withName('/home'));
+    } on FirebaseAuthException catch (e, s) {
+      captureErrors(context, e, s);
+    }
   }
 
   profRegister(BuildContext context,
       {required String email,
       required String password,
       required String name}) async {
-    final authController = AuthController();
-    auth.createUserWithEmailAndPassword(email: email, password: password);
-    auth.signInWithEmailAndPassword(email: email, password: password);
-    final currUser = auth.currentUser;
-    currUser!.updateDisplayName(name.toUpperCase().trim());
-    final user = UserModel(name: name, email: email, id: currUser.uid);
-    authController.saveUser(user);
-    authController.setUser(context, user);
-    Navigator.popUntil(context, ModalRoute.withName('/home'));
+    try {
+      final authController = AuthController();
+      auth.createUserWithEmailAndPassword(email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+      final currUser = auth.currentUser;
+      currUser!.updateDisplayName(name.toUpperCase().trim());
+      final user = UserModel(name: name, email: email, id: currUser.uid);
+      authController.saveUser(user);
+      authController.setUser(context, user);
+      Navigator.popUntil(context, ModalRoute.withName('/home'));
+    } on FirebaseAuthException catch (e, s) {
+      captureErrors(context, e, s);
+    }
   }
 }

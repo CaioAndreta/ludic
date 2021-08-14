@@ -73,9 +73,13 @@ class _AppWidgetState extends State<AppWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: (context, child) {
+        return ScrollConfiguration(
+            behavior: AppScrollBehavior(), child: child!);
+      },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-
+          accentColor: AppColors.primary,
           canvasColor: AppColors.secondary,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
               backgroundColor: AppColors.primary,
@@ -115,5 +119,20 @@ class _AppWidgetState extends State<AppWidget> {
             tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa)
       },
     );
+  }
+}
+
+class AppScrollBehavior extends ScrollBehavior {
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    switch (getPlatform(context)) {
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+      case TargetPlatform.android:
+        return const BouncingScrollPhysics();
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
+        return const ClampingScrollPhysics();
+    }
   }
 }

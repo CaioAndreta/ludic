@@ -23,7 +23,6 @@ class SalaView extends StatefulWidget {
 
 class _SalaViewState extends State<SalaView> {
   List tarefas = [];
-  File? file;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _descController = TextEditingController();
   UploadTask? task;
@@ -78,6 +77,7 @@ class _SalaViewState extends State<SalaView> {
                 primary: AppColors.primary,
               ),
               onPressed: () {
+                File? file;
                 final _formKey = GlobalKey<FormState>();
                 _descController = TextEditingController();
                 _nameController = TextEditingController();
@@ -161,7 +161,7 @@ class _SalaViewState extends State<SalaView> {
                                             label: 'Selecione o Arquivo',
                                             onPressed: selectFile,
                                           ),
-                                          Text(fileName,
+                                          Text('$fileName',
                                               style: TextStyles.blackHintText),
                                         ],
                                       )

@@ -55,33 +55,39 @@ class _ListaTarefasState extends State<ListaTarefas> {
                       String tarDesc = doc['descricao'];
                       String tarPath = '${widget.sala.codigo}/$tarNome';
                       Tarefa tarefa = Tarefa(
-                          nome: tarNome, descricao: tarDesc, path: tarPath);
+                          nome: tarNome, descricao: tarDesc, path: tarPath, codigoSala: widget.sala.codigo);
                       Navigator.of(context)
                           .pushNamed('/tarefa', arguments: tarefa);
                     },
-                    child: Container(
-                      color: AppColors.secondary,
-                      child: ListTile(
-                        trailing: PopupMenuButton(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Container(
                           color: AppColors.secondary,
-                          itemBuilder: (_) => [
-                            PopupMenuItem(
-                                child: ListTile(
-                                    leading: Icon(Icons.delete,
-                                        color: AppColors.delete),
-                                    title: Text('Apagar',
-                                        style:
-                                            TextStyle(color: AppColors.delete)),
-                                    onTap: () {
-                                      deleteTarefa(doc['nome']);
-                                      Navigator.pop(context);
-                                    })),
-                          ],
+                          child: ListTile(
+                            trailing: PopupMenuButton(
+                              color: AppColors.secondary,
+                              itemBuilder: (_) => [
+                                PopupMenuItem(
+                                    child: ListTile(
+                                        leading: Icon(Icons.delete,
+                                            color: AppColors.delete),
+                                        title: Text('Apagar',
+                                            style: TextStyle(
+                                                color: AppColors.delete)),
+                                        onTap: () {
+                                          deleteTarefa(doc['nome']);
+                                          Navigator.pop(context);
+                                        })),
+                              ],
+                            ),
+                            title: Text(doc['nome'],
+                                style: TextStyles.blackTitleText),
+                            subtitle: Text(doc['descricao'],
+                                style: TextStyles.blackHintText),
+                          ),
                         ),
-                        title:
-                            Text(doc['nome'], style: TextStyles.blackTitleText),
-                        subtitle: Text(doc['descricao'],
-                            style: TextStyles.blackHintText),
                       ),
                     ),
                   ),

@@ -27,34 +27,35 @@ class _DatePickerState extends State<DatePicker> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      width: size.width * 0.8,
-      decoration: BoxDecoration(
-          color: AppColors.secondary,
-          borderRadius: BorderRadius.circular(29),
-          border: Border.all(color: AppColors.primary)),
-      child: TextButton(
-        style: TextButton.styleFrom(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0)),
-            padding: EdgeInsets.symmetric(vertical: 40, horizontal: 40),
-            primary: AppColors.primary),
-        onPressed: () {
-          _selectDate(context);
-        },
-        child: Column(children: [
-          Text('Data de Envio:', style: TextStyles.primaryHintText),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              '${widget.selectedDate.day}/${widget.selectedDate.month}/${widget.selectedDate.year}',
-              style: TextStyles.primaryHintText,
+    return Column(
+      children: [
+        Text('Data de Envio:', style: TextStyles.primaryHintText),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          width: size.width * 0.8,
+          decoration: BoxDecoration(
+              color: AppColors.secondary,
+              borderRadius: BorderRadius.circular(29),
+              border: Border.all(color: AppColors.primary)),
+          child: TextButton(
+            style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                primary: AppColors.primary),
+            onPressed: () {
+              _selectDate(context);
+            },
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                '${widget.selectedDate.day}/${widget.selectedDate.month}/${widget.selectedDate.year}',
+                style: TextStyles.primaryCodigoSala,
+              ),
             ),
-          )
-        ]),
-      ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/sala_model.dart';
+import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
@@ -62,7 +63,7 @@ class _SalaViewState extends State<SalaView> {
         );
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: AppColors.secondary,
         appBar: AppBar(),
@@ -193,6 +194,83 @@ class _SalaViewState extends State<SalaView> {
             ),
           ),
           ListaAlunos(db: db, sala: sala),
+          StreamBuilder(
+              stream: db
+                  .collection('salas')
+                  .doc(sala.codigo)
+                  .collection('tarefas')
+                  .where('status',
+                      whereIn: ['Em andamento', 'Completa']).snapshots(),
+              builder: (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
+                deleteTarefa(tarNome) {
+                  db
+                      .collection('salas')
+                      .doc(sala.codigo)
+                      .collection('tarefas')
+                      .doc(tarNome)
+                      .delete();
+                  setState(() {});
+                }
+
+                if (!snapshot.hasData) {
+                  return Center(
+                      child:
+                          CircularProgressIndicator(color: AppColors.primary));
+                }
+                return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (_, index) {
+                      var doc = snapshot.data!.docs[index];
+                      return Container(
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        child: GestureDetector(
+                          onTap: () {
+                            String tarNome = doc['nome'];
+                            String tarDesc = doc['descricao'];
+                            String tarPath = '${sala.codigo}/$tarNome';
+                            Tarefa tarefa = Tarefa(
+                                nome: tarNome,
+                                descricao: tarDesc,
+                                path: tarPath,
+                                codigoSala: sala.codigo);
+                            Navigator.of(context)
+                                .pushNamed('/tarefa', arguments: tarefa);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Container(
+                                color: AppColors.secondary,
+                                child: ListTile(
+                                  trailing: PopupMenuButton(
+                                    color: AppColors.secondary,
+                                    itemBuilder: (_) => [
+                                      PopupMenuItem(
+                                          child: ListTile(
+                                              leading: Icon(Icons.delete,
+                                                  color: AppColors.delete),
+                                              title: Text('Apagar',
+                                                  style: TextStyle(
+                                                      color: AppColors.delete)),
+                                              onTap: () {
+                                                deleteTarefa(doc['nome']);
+                                                Navigator.pop(context);
+                                              })),
+                                    ],
+                                  ),
+                                  title: Text(doc['nome'],
+                                      style: TextStyles.blackTitleText),
+                                  subtitle: Text(doc['descricao'],
+                                      style: TextStyles.blackHintText),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+              })
         ]),
         bottomNavigationBar: Material(
           color: AppColors.secondaryDark,
@@ -213,6 +291,11 @@ class _SalaViewState extends State<SalaView> {
                   height: size.height * 0.1,
                   child: Center(
                       child: Text('Sala', style: TextStyles.primaryTitleText))),
+              Container(
+                  height: size.height * 0.1,
+                  child: Center(
+                      child: Text('Tarefas enviadas',
+                          style: TextStyles.primaryTitleText))),
             ],
           ),
         ),

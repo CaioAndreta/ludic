@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                           var doc = snapshot.data!.docs[index];
                           return Container(
                             padding: EdgeInsets.all(5),
-                            height: 300,
+                            height: 250,
                             width: double.infinity,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),

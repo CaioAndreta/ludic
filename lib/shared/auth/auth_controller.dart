@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthController {
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
-  var _user;
+  UserModel? _user;
 
   get user => _user;
 
@@ -84,10 +84,10 @@ class AuthController {
   ) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: senha);
-      final user = UserModel(
-          name: auth.currentUser!.displayName,
-          email: auth.currentUser!.email,
-          id: auth.currentUser!.uid);
+      final DocumentSnapshot<Map<String, dynamic>> doc =
+          await db.collection('usuarios').doc(email).get();
+      _user = UserModel.fromMap(doc.data());
+      print(_user!.name);
       saveUser(user);
       Navigator.of(context).pushReplacementNamed('/home', arguments: user);
     } on FirebaseAuthException catch (e, s) {
@@ -107,7 +107,8 @@ class AuthController {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       final currUser = auth.currentUser;
       currUser!.updateDisplayName(name);
-      final user = UserModel(name: name, email: email, id: currUser.uid);
+      final user = UserModel(
+          name: name, email: email, id: currUser.uid, isTeacher: false);
       db
           .collection('usuarios')
           .doc(email)
@@ -132,7 +133,8 @@ class AuthController {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       final currUser = auth.currentUser;
       currUser!.updateDisplayName(name);
-      final user = UserModel(name: name, email: email, id: currUser.uid);
+      final user = UserModel(
+          name: name, email: email, id: currUser.uid, isTeacher: true);
       db
           .collection('usuarios')
           .doc(email)

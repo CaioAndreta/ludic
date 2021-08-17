@@ -55,7 +55,10 @@ class _ListaTarefasState extends State<ListaTarefas> {
                       String tarDesc = doc['descricao'];
                       String tarPath = '${widget.sala.codigo}/$tarNome';
                       Tarefa tarefa = Tarefa(
-                          nome: tarNome, descricao: tarDesc, path: tarPath, codigoSala: widget.sala.codigo);
+                          nome: tarNome,
+                          descricao: tarDesc,
+                          path: tarPath,
+                          codigoSala: widget.sala.codigo);
                       Navigator.of(context)
                           .pushNamed('/tarefa', arguments: tarefa);
                     },
@@ -84,8 +87,6 @@ class _ListaTarefasState extends State<ListaTarefas> {
                             ),
                             title: Text(doc['nome'],
                                 style: TextStyles.blackTitleText),
-                            subtitle: Text(doc['descricao'],
-                                style: TextStyles.blackHintText),
                           ),
                         ),
                       ),

@@ -4,7 +4,7 @@ import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../tarefa_view.dart';
+import '../tarefa_professor_view.dart';
 
 class TarefaDetalhes extends StatelessWidget {
   const TarefaDetalhes({
@@ -14,7 +14,7 @@ class TarefaDetalhes extends StatelessWidget {
   }) : super(key: key);
 
   final Future<List<FirebaseFile>> futureFiles;
-  final TarefaView widget;
+  final TarefaProfessor widget;
 
   @override
   Widget build(BuildContext context) {

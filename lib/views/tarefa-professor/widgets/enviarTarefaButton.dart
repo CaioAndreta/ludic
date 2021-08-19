@@ -4,7 +4,7 @@ import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/inputField.dart';
-import 'package:ludic/views/tarefa/tarefa_view.dart';
+import 'package:ludic/views/tarefa-professor/tarefa_professor_view.dart';
 
 class EnviarTarefaButton extends StatelessWidget {
   const EnviarTarefaButton({
@@ -16,7 +16,7 @@ class EnviarTarefaButton extends StatelessWidget {
 
   final Size size;
   final FirebaseFirestore db;
-  final TarefaView widget;
+  final TarefaProfessor widget;
 
   @override
   Widget build(BuildContext context) {

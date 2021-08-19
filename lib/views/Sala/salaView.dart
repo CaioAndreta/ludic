@@ -32,7 +32,7 @@ class _SalaViewState extends State<SalaView> {
     final db = FirebaseFirestore.instance;
     final size = MediaQuery.of(context).size;
     addTarefa(String name, String desc) {
-      tarefas.add({'nome': name, 'descricao': desc, 'enviado': true});
+      tarefas.add({'nome': name, 'descricao': desc});
       tarefas.forEach((element) {
         db
             .collection('salas')
@@ -42,7 +42,6 @@ class _SalaViewState extends State<SalaView> {
             .set({
           'nome': element['nome'],
           'descricao': element['descricao'],
-          'enviado': element['enviado']
         });
         setState(() {});
       });
@@ -194,109 +193,143 @@ class _SalaViewState extends State<SalaView> {
             ),
           ),
           ListaAlunos(db: db, sala: sala),
-          StreamBuilder(
-              stream: db
-                  .collection('salas')
-                  .doc(sala.codigo)
-                  .collection('tarefas')
-                  .orderBy('data de conclusao')
-                  .snapshots(),
-              builder: (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-                deleteTarefa(tarNome) {
-                  db
-                      .collection('salas')
-                      .doc(sala.codigo)
-                      .collection('tarefas')
-                      .doc(tarNome)
-                      .delete();
-                  setState(() {});
-                }
-
-                if (!snapshot.hasData) {
-                  return Center(
-                      child:
-                          CircularProgressIndicator(color: AppColors.primary));
-                }
-
-                return Column(
-                  children: [
-                    Text('Em andamento', style: TextStyles.primaryTitleText),
-                    Text('Concluídas', style: TextStyles.primaryTitleText),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (_, index) {
-                          List tarEmAndamento = [];
-                          List tarConcluidas = [];
-                          var doc = snapshot.data!.docs[index];
-                          if (doc['data de conclusao'] < DateTime.now()) {
-                            tarEmAndamento.add(doc);
-                          } else {
-                            tarConcluidas.add(doc);
-                          }
-
-                          return Container(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: GestureDetector(
-                              onTap: () {
-                                String tarNome = doc['nome'];
-                                String tarDesc = doc['descricao'];
-                                String tarPath = '${sala.codigo}/$tarNome';
-                                Tarefa tarefa = Tarefa(
-                                    nome: tarNome,
-                                    descricao: tarDesc,
-                                    path: tarPath,
-                                    codigoSala: sala.codigo);
-                                Navigator.of(context)
-                                    .pushNamed('/tarefa', arguments: tarefa);
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Container(
-                                    color: AppColors.secondary,
-                                    child: ListTile(
-                                      trailing: PopupMenuButton(
-                                        color: AppColors.secondary,
-                                        itemBuilder: (_) => [
-                                          PopupMenuItem(
-                                              child: ListTile(
-                                                  leading: Icon(Icons.delete,
-                                                      color: AppColors.delete),
-                                                  title: Text('Apagar',
-                                                      style: TextStyle(
-                                                          color: AppColors
-                                                              .delete)),
-                                                  onTap: () {
-                                                    deleteTarefa(doc['nome']);
-                                                    Navigator.pop(context);
-                                                  })),
-                                        ],
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: AppColors.secondaryDark,
+            child: Column(
+              children: [
+                Text('Em andamento', style: TextStyles.primaryTitleText),
+                StreamBuilder(
+                    stream: db
+                        .collection('salas')
+                        .doc(sala.codigo)
+                        .collection('tarefas')
+                        .where('data de conclusao',
+                            isGreaterThanOrEqualTo: DateTime.now())
+                        .orderBy('data de conclusao')
+                        .snapshots(),
+                    builder:
+                        (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                            child: CircularProgressIndicator(
+                                color: AppColors.primary));
+                      }
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (_, index) {
+                            var doc = snapshot.data!.docs[index];
+                            return Container(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: GestureDetector(
+                                onTap: () {
+                                  String tarNome = doc['nome'];
+                                  String tarDesc = doc['descricao'];
+                                  String tarPath = '${sala.codigo}/$tarNome';
+                                  Tarefa tarefa = Tarefa(
+                                      nome: tarNome,
+                                      descricao: tarDesc,
+                                      path: tarPath,
+                                      codigoSala: sala.codigo);
+                                  Navigator.of(context).pushNamed(
+                                      '/tarefa-aluno',
+                                      arguments: tarefa);
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Container(
+                                      color: AppColors.secondary,
+                                      child: ListTile(
+                                        title: Text(doc['nome'],
+                                            style: TextStyles.blackTitleText),
+                                        subtitle: Text(
+                                            'Vence em ' +
+                                                DateFormat('dd/MM/yy')
+                                                    .format(
+                                                        doc['data de conclusao']
+                                                            .toDate())
+                                                    .toString(),
+                                            style: TextStyles.blackHintText),
                                       ),
-                                      title: Text(doc['nome'],
-                                          style: TextStyles.blackTitleText),
-                                      subtitle: Text(
-                                          'Vence em ' +
-                                              DateFormat('dd/MM/yy')
-                                                  .format(
-                                                      doc['data de conclusao']
-                                                          .toDate())
-                                                  .toString(),
-                                          style: TextStyles.blackHintText),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
-                  ],
-                );
-              })
+                            );
+                          });
+                    }),
+                Text('Concluídas', style: TextStyles.primaryTitleText),
+                StreamBuilder(
+                    stream: db
+                        .collection('salas')
+                        .doc(sala.codigo)
+                        .collection('tarefas')
+                        .where('data de conclusao', isLessThan: DateTime.now())
+                        .orderBy('data de conclusao')
+                        .snapshots(),
+                    builder:
+                        (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                            child: CircularProgressIndicator(
+                                color: AppColors.primary));
+                      }
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (_, index) {
+                            var doc = snapshot.data!.docs[index];
+                            return Container(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: GestureDetector(
+                                onTap: () {
+                                  String tarNome = doc['nome'];
+                                  String tarDesc = doc['descricao'];
+                                  String tarPath = '${sala.codigo}/$tarNome';
+                                  Tarefa tarefa = Tarefa(
+                                      nome: tarNome,
+                                      descricao: tarDesc,
+                                      path: tarPath,
+                                      codigoSala: sala.codigo);
+                                  Navigator.of(context).pushNamed(
+                                      '/tarefa-aluno',
+                                      arguments: tarefa);
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Container(
+                                      color: AppColors.secondary,
+                                      child: ListTile(
+                                        title: Text(doc['nome'],
+                                            style: TextStyles.blackTitleText),
+                                        subtitle: Text(
+                                            'Venceu em ' +
+                                                DateFormat('dd/MM/yy')
+                                                    .format(
+                                                        doc['data de conclusao']
+                                                            .toDate())
+                                                    .toString(),
+                                            style: TextStyles.blackHintText),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                    })
+              ],
+            ),
+          )
         ]),
         bottomNavigationBar: Material(
-          color: AppColors.secondaryDark,
+          color: AppColors.secondary,
           child: TabBar(
             indicator: UnderlineTabIndicator(
                 borderSide: BorderSide(width: 3, color: AppColors.primary),

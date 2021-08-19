@@ -60,7 +60,7 @@ class _ListaTarefasState extends State<ListaTarefas> {
                           path: tarPath,
                           codigoSala: widget.sala.codigo);
                       Navigator.of(context)
-                          .pushNamed('/tarefa', arguments: tarefa);
+                          .pushNamed('/tarefa-professor', arguments: tarefa);
                     },
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),

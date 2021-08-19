@@ -11,7 +11,8 @@ import 'package:ludic/views/login/login.dart';
 import 'package:ludic/views/register/register.dart';
 import 'package:ludic/views/sala/salaView.dart';
 import 'package:ludic/views/splash_screen/splash_screen.dart';
-import 'package:ludic/views/tarefa/tarefa_view.dart';
+import 'package:ludic/views/tarefa-aluno/tarefa_aluno.dart';
+import 'package:ludic/views/tarefa-professor/tarefa_professor_view.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({
@@ -114,7 +115,9 @@ class _AppWidgetState extends State<AppWidget> {
         '/nova-sala': (context) => NovaSalaView(),
         '/entrar-sala': (context) => EntrarSalaView(),
         '/sala': (context) => SalaView(),
-        '/tarefa': (context) => TarefaView(
+        '/tarefa-professor': (context) => TarefaProfessor(
+            tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
+        '/tarefa-aluno': (context) => TarefaAluno(
             tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa)
       },
     );

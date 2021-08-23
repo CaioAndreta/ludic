@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/inputField.dart';
-import 'package:ludic/views/tarefa-professor/tarefa_professor_view.dart';
+import 'package:ludic/views/detalhes_tarefa_professor/tarefa_professor_view.dart';
 
 class EnviarTarefaButton extends StatelessWidget {
-  const EnviarTarefaButton({
+  EnviarTarefaButton({
     Key? key,
     required this.size,
     required this.db,
@@ -17,6 +18,8 @@ class EnviarTarefaButton extends StatelessWidget {
   final Size size;
   final FirebaseFirestore db;
   final TarefaProfessor widget;
+  final auth = FirebaseAuth.instance;
+  Map<String, bool> alunosId = {};
 
   @override
   Widget build(BuildContext context) {
@@ -123,16 +126,28 @@ class EnviarTarefaButton extends StatelessWidget {
                               Button(
                                   label: 'Enviar Tarefa',
                                   onPressed: () {
-                                    db
-                                        .collection('salas')
-                                        .doc(widget.tarefa.codigoSala)
-                                        .collection('tarefas')
-                                        .doc(widget.tarefa.nome)
-                                        .update({
-                                      'enviado': true,
-                                      'data de conclusao':
-                                          selectedDate.toLocal()
-                                    });
+                                    db.collection('salas')
+                                      ..doc(widget.tarefa.codigoSala)
+                                          .collection('alunos')
+                                          .get()
+                                          .then((querySnapshot) => {
+                                                querySnapshot.docs
+                                                    .forEach((doc) {
+                                                  alunosId[doc.get('email')] =
+                                                      false;
+                                                })
+                                              })
+                                          .then((value) => db
+                                                  .collection('salas')
+                                                  .doc(widget.tarefa.codigoSala)
+                                                  .collection('tarefas')
+                                                  .doc(widget.tarefa.nome)
+                                                  .update({
+                                                'data de conclusao':
+                                                    selectedDate.toLocal(),
+                                                'entregues': alunosId
+                                              }));
+
                                     Navigator.popUntil(
                                         context, ModalRoute.withName('/sala'));
                                   })

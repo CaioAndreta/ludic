@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/firebaseFile.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
-import 'package:ludic/views/tarefa-professor/widgets/enviarTarefaButton.dart';
-import 'package:ludic/views/tarefa-professor/widgets/tarefaDetalhes.dart';
+import 'package:ludic/views/detalhes_tarefa_professor/widgets/enviarTarefaButton.dart';
+import 'package:ludic/views/detalhes_tarefa_professor/widgets/tarefaDetalhes.dart';
 
 class TarefaProfessor extends StatefulWidget {
   const TarefaProfessor({Key? key, required this.tarefa}) : super(key: key);

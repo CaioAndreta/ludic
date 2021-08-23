@@ -51,20 +51,25 @@ class HomeDrawer extends StatelessWidget {
                   child: Column(
                     children: [
                       ListTile(
-                        leading: Icon(Icons.exit_to_app),
-                        title: Text('Sair'),
-                        onTap: () async {
-                          await FirebaseAuth.instance.signOut();
-                          Navigator.of(context)
-                              .pushNamedAndRemoveUntil('/login', (route) => false);
-                          SharedPreferences preferences =
-                              await SharedPreferences.getInstance();
-                          preferences.remove('user');
-                        },
+                        leading: Icon(Icons.settings),
+                        title: Text('Configurações da conta'),
+                        onTap: () {},
                       ),
                     ],
                   ),
                 ),
+                ListTile(
+                  leading: Icon(Icons.exit_to_app),
+                  title: Text('Sair'),
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/login', (route) => false);
+                    SharedPreferences preferences =
+                        await SharedPreferences.getInstance();
+                    preferences.remove('user');
+                  },
+                )
               ],
             ),
           ),

@@ -5,7 +5,7 @@ import 'package:ludic/shared/models/sala_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:ludic/shared/widgets/HomeDrawer.dart';
+import 'package:ludic/views/home_page/widgets/HomeDrawer.dart';
 import 'package:ludic/views/home_page/telas/perfil.dart';
 
 class HomePage extends StatefulWidget {

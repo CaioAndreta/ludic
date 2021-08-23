@@ -33,7 +33,8 @@ class AuthController {
     final instance = await SharedPreferences.getInstance();
     if (instance.containsKey('user')) {
       final json = instance.get('user') as String;
-      setUser(context, UserModel.fromJson(json));
+      var user = UserModel.fromJson(json);
+      setUser(context, user);
       return;
     } else {
       setUser(context, null);

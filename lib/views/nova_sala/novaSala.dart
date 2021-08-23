@@ -4,11 +4,12 @@ import 'package:flutter/widgets.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:ludic/views/novaSala/telas/1_nomeSala.dart';
-import 'package:ludic/views/novaSala/telas/2_addTarefas.dart';
-import 'package:ludic/views/novaSala/telas/3_codigoSala.dart';
 import 'package:random_string/random_string.dart';
 import 'package:short_uuids/short_uuids.dart';
+
+import 'telas/1_nomeSala.dart';
+import 'telas/2_addTarefas.dart';
+import 'telas/3_codigoSala.dart';
 
 class NovaSalaView extends StatefulWidget {
   const NovaSalaView({Key? key}) : super(key: key);

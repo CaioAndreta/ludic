@@ -13,7 +13,7 @@ import 'package:ludic/views/splash_screen/splash_screen.dart';
 import 'detalhes_tarefa_professor/tarefa_professor_view.dart';
 import 'entrar_sala/entrarSala.dart';
 import 'nova_sala/novaSala.dart';
-import 'detalhes_tarefa_aluno/tarefa_aluno.dart';
+import 'detalhes_tarefa_aluno/tarefa_aluno_view.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({

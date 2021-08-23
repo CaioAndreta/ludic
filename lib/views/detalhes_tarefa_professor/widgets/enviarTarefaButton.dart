@@ -133,7 +133,7 @@ class EnviarTarefaButton extends StatelessWidget {
                                           .then((querySnapshot) => {
                                                 querySnapshot.docs
                                                     .forEach((doc) {
-                                                  alunosId[doc.get('email')] =
+                                                  alunosId[doc.get('id')] =
                                                       false;
                                                 })
                                               })

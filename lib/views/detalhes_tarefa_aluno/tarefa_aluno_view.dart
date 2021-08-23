@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart';
 
 class TarefaAluno extends StatefulWidget {
-  const TarefaAluno({Key? key, required this.tarefa}) : super(key: key);
+  TarefaAluno({Key? key, required this.tarefa}) : super(key: key);
   final Tarefa tarefa;
 
   @override
@@ -24,6 +24,7 @@ class TarefaAluno extends StatefulWidget {
 class _TarefaAlunoState extends State<TarefaAluno> {
   UploadTask? task;
   final auth = FirebaseAuth.instance;
+  final db = FirebaseFirestore.instance;
   UploadTask? dbUpload(String destination, File file) {
     try {
       final ref = FirebaseStorage.instance.ref(destination);
@@ -181,7 +182,14 @@ class _TarefaAlunoState extends State<TarefaAluno> {
                 ),
                 onPressed: () async {
                   await uploadFile();
-                  
+                  db
+                      .collection('salas')
+                      .doc(widget.tarefa.codigoSala)
+                      .collection('tarefas')
+                      .doc(widget.tarefa.nome)
+                      .update({
+                    'entregues': {auth.currentUser!.uid: true}
+                  });
                   Navigator.pop(context);
                 }),
           ),

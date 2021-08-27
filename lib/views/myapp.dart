@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
+import 'package:ludic/views/corrigir_tarefa/corrigir_tarefa_view.dart';
 import 'package:ludic/views/home_page/homePage.dart';
+import 'package:ludic/views/lista_correcao/lista_correcao_view.dart';
 import 'package:ludic/views/register/escolherRegistro.dart';
 import 'package:ludic/views/login/login.dart';
 import 'package:ludic/views/register/register.dart';
@@ -28,7 +30,6 @@ class MyApp extends StatelessWidget {
 }
 
 class AppFirebase extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   _AppFirebaseState createState() => _AppFirebaseState();
 }
@@ -38,7 +39,6 @@ class _AppFirebaseState extends State<AppFirebase> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // Initialize FlutterFire:
       future: _initialization,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -119,6 +119,10 @@ class _AppWidgetState extends State<AppWidget> {
         '/tarefa-professor': (context) => TarefaProfessor(
             tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
         '/tarefa-aluno': (context) => TarefaAluno(
+            tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
+        '/lista-correcao': (context) => ListaCorrecao(
+            tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
+        '/corrigir-tarefa': (context) => CorrigirTarefa(
             tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa)
       },
     );

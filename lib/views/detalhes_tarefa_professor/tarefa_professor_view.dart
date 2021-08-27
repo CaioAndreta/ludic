@@ -40,7 +40,7 @@ class _TarefaProfessorState extends State<TarefaProfessor> {
 
   void initState() {
     super.initState();
-    futureFiles = listAll(widget.tarefa.path);
+    futureFiles = listAll('${widget.tarefa.path}');
   }
 
   @override

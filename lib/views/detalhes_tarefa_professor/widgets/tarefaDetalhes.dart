@@ -48,7 +48,7 @@ class TarefaDetalhes extends StatelessWidget {
                 Container(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     margin: EdgeInsets.only(bottom: 10),
-                    child: Text(widget.tarefa.descricao,
+                    child: Text('${widget.tarefa.descricao}',
                         style: TextStyles.blackTitleText)),
                 Text(
                   'Arquivos:',

@@ -1,51 +1,22 @@
-import 'dart:io';
+import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/firebaseFile.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
-import 'package:ludic/shared/widgets/button.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:path/path.dart';
 
-class TarefaAluno extends StatefulWidget {
-  TarefaAluno({Key? key, required this.tarefa}) : super(key: key);
+class CorrigirTarefa extends StatefulWidget {
+  const CorrigirTarefa({Key? key, required this.tarefa}) : super(key: key);
   final Tarefa tarefa;
 
   @override
-  State<TarefaAluno> createState() => _TarefaAlunoState();
+  State<CorrigirTarefa> createState() => _CorrigirTarefaState();
 }
 
-class _TarefaAlunoState extends State<TarefaAluno> {
-  UploadTask? task;
-  final auth = FirebaseAuth.instance;
-  final db = FirebaseFirestore.instance;
-  UploadTask? dbUpload(String destination, File file) {
-    try {
-      final ref = FirebaseStorage.instance.ref(destination);
-      return ref.putFile(file);
-    } on FirebaseException catch (e) {
-      return null;
-    }
-  }
-
-  Future uploadFile() async {
-    if (file == null) return;
-    final fileName = basename(file!.path);
-    final destination =
-        '${widget.tarefa.codigoSala}/${widget.tarefa.nome}/alunos/${auth.currentUser!.email}/$fileName';
-    task = dbUpload(destination, file!);
-    setState(() {});
-    if (task == null) return;
-  }
-
-  File? file;
-
+class _CorrigirTarefaState extends State<CorrigirTarefa> {
   var storage = FirebaseStorage.instance;
   late Future<List<FirebaseFile>> futureFiles;
   Future<List<String>> _getDownloadLinks(List<Reference> refs) =>
@@ -70,22 +41,22 @@ class _TarefaAlunoState extends State<TarefaAluno> {
 
   void initState() {
     super.initState();
-    futureFiles = listAll('${widget.tarefa.path}');
-  }
-
-  Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result == null) return;
-    final path = result.files.single.path!;
-    setState(() {
-      file = File(path);
-    });
+    futureFiles = listAll('/8OZ7FO4/tarefa1/alunos/medonas@gmail.com');
   }
 
   @override
   Widget build(BuildContext context) {
-    final fileName =
-        file != null ? basename(file!.path) : 'Nenhum arquivo selecionado';
+    final db = FirebaseFirestore.instance;
+    var size = MediaQuery.of(context).size;
+    deleteTarefa(String? tarNome, String? tarPath) {
+      db
+          .collection('salas')
+          .doc(widget.tarefa.codigoSala)
+          .collection('tarefas')
+          .doc(tarNome)
+          .delete();
+      // FirebaseStorage.instance.ref().delete();
+    }
 
     return Scaffold(
         appBar: AppBar(),
@@ -104,7 +75,7 @@ class _TarefaAlunoState extends State<TarefaAluno> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nome da tarefa:',
+                      'Aluno',
                       style: TextStyles.blackHintText,
                     ),
                     Container(
@@ -121,7 +92,10 @@ class _TarefaAlunoState extends State<TarefaAluno> {
                         margin: EdgeInsets.only(bottom: 10),
                         child: Text('${widget.tarefa.descricao}',
                             style: TextStyles.blackTitleText)),
-                    Text('Arquivos:', style: TextStyles.blackHintText),
+                    Text(
+                      'Arquivos:',
+                      style: TextStyles.blackHintText,
+                    ),
                     Container(
                       child: ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
@@ -144,53 +118,10 @@ class _TarefaAlunoState extends State<TarefaAluno> {
                               ),
                             );
                           }),
-                    ),
-                    Text(
-                      'Meu Trabalho:',
-                      style: TextStyles.blackHintText,
-                    ),
-                    Column(
-                      children: [
-                        Button(
-                          label: 'Selecione o Arquivo',
-                          onPressed: selectFile,
-                        ),
-                        Text('$fileName', style: TextStyles.blackHintText),
-                      ],
-                    ),
+                    )
                   ],
                 ),
               );
-            }),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.all(10),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(29),
-            ),
-            child: TextButton(
-                style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                    primary: AppColors.primary),
-                child: Text(
-                  'Entregar Tarefa',
-                  style: TextStyle(color: AppColors.secondary),
-                ),
-                onPressed: () async {
-                  await uploadFile();
-                  db
-                      .collection('salas')
-                      .doc(widget.tarefa.codigoSala)
-                      .collection('tarefas')
-                      .doc(widget.tarefa.nome)
-                      .update({'entregues.${auth.currentUser!.uid}': true});
-                  Navigator.pop(context);
-                }),
-          ),
-        ));
+            }));
   }
 }

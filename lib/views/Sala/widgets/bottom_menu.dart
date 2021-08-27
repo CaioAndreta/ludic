@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
@@ -8,7 +6,6 @@ class BottomMenu extends StatelessWidget {
   const BottomMenu({
     Key? key,
   }) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +23,21 @@ class BottomMenu extends StatelessWidget {
           Container(
               height: size.height * 0.1,
               child: Center(
-                  child:
-                      Text('Tarefas', style: TextStyles.primaryTitleText))),
+                  child: Text('Tarefas', style: TextStyles.primaryHintText))),
           Container(
               height: size.height * 0.1,
               child: Center(
-                  child: Text('Sala', style: TextStyles.primaryTitleText))),
+                  child: Text('Sala', style: TextStyles.primaryHintText))),
           Container(
               height: size.height * 0.1,
               child: Center(
                   child: Text('Tarefas enviadas',
-                      style: TextStyles.primaryTitleText))),
+                      style: TextStyles.primaryHintText))),
+          Container(
+              height: size.height * 0.1,
+              child: Center(
+                  child: Text('Corrigir tarefas',
+                      style: TextStyles.primaryHintText))),
         ],
       ),
     );

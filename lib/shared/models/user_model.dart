@@ -5,16 +5,18 @@ class UserModel {
   String? name;
   String? email;
 
-  UserModel(
-      {required this.name,
-      required this.email,
-      required this.id,});
+  UserModel({
+    required this.name,
+    required this.email,
+    required this.id,
+  });
 
   factory UserModel.fromMap(Map<String, dynamic>? map) {
     return UserModel(
-        name: map!['nome'],
-        email: map['email'],
-        id: map['id'],);
+      id: map!['id'],
+      name: map['nome'],
+      email: map['email'],
+    );
   }
 
   factory UserModel.fromJson(String json) =>
@@ -22,7 +24,7 @@ class UserModel {
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'name': name,
+        'nome': name,
         'email': email,
       };
   String toJson() => jsonEncode(toMap());

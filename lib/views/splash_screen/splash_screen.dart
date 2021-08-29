@@ -10,11 +10,10 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  late Future<void> getCurrUser;
   @override
   void initState() {
     final authController = AuthController();
-    getCurrUser = authController.currentUser(context);
+    authController.currentUser(context);
     super.initState();
   }
 

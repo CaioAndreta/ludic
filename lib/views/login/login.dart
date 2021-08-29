@@ -64,11 +64,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Button(
                   label: 'Login',
-                  onPressed: () {
+                  onPressed: () async {
                     final form = _formKey.currentState!;
                     if (form.validate()) {
                       final authController = AuthController();
-                      authController.userLogin(
+                      await authController.userLogin(
                           context,
                           _emailController.text.trim(),
                           _passwordController.text);

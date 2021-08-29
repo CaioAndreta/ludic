@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:ludic/shared/models/firebaseFile.dart';
+import 'package:ludic/shared/models/tarefa_aluno_model.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 
@@ -15,45 +14,9 @@ class ListaCorrecao extends StatefulWidget {
 }
 
 class _ListaCorrecaoState extends State<ListaCorrecao> {
-  Future<List<String>> _getDownloadLinks(List<Reference> refs) =>
-      Future.wait(refs.map((ref) => ref.getDownloadURL()).toList());
-  Future<List<FirebaseFile>> listAll(String path) async {
-    final ref = FirebaseStorage.instance.ref(path);
-    final result = await ref.listAll();
-    final urls = await _getDownloadLinks(result.items);
-    return urls
-        .asMap()
-        .map((index, url) {
-          final ref = result.items[index];
-          final name = ref.name;
-          final file = FirebaseFile(ref: ref, name: name, url: url);
-
-          return MapEntry(index, file);
-        })
-        .values
-        .toList();
-  }
-
-  get fileName => null;
-
-  @override
-  void initState() {
-    super.initState();
-
-    var futureFiles = listAll('/8OZ7FO4/tarefa1/alunos/medonas@gmail.com');
-  }
-
   @override
   Widget build(BuildContext context) {
     final db = FirebaseFirestore.instance;
-    final ref = FirebaseStorage.instance
-        .ref('/8OZ7FO4/tarefa1/alunos/medonas@gmail.com');
-    getFiles() async {
-      final result = await ref.listAll();
-      return result;
-    }
-
-    final result = getFiles();
 
     return Scaffold(
       appBar: AppBar(),
@@ -76,8 +39,14 @@ class _ListaCorrecaoState extends State<ListaCorrecao> {
                 var doc = snapshot.data!.docs[index];
                 return GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/corrigir-tarefa',
-                        arguments: widget.tarefa);
+                    String path =
+                        '${widget.tarefa.codigoSala}/${widget.tarefa.nome}/alunos/${doc["email"]}';
+                    String name = doc['aluno'];
+                    String email = doc['email'];
+                    TarefaAluno tar =
+                        TarefaAluno(nomeAluno: name, path: path, email: email, codigoSala: widget.tarefa.codigoSala, nomeTarefa: widget.tarefa.nome);
+                    Navigator.of(context)
+                        .pushNamed('/corrigir-tarefa', arguments: tar);
                   },
                   child: Card(
                     child: ListTile(

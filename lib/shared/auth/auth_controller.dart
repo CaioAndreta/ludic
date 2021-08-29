@@ -25,6 +25,7 @@ class AuthController {
   Future<void> saveUser(UserModel user) async {
     final instance = await SharedPreferences.getInstance();
     await instance.setString('user', user.toJson());
+    print(user.toJson());
     return;
   }
 
@@ -88,7 +89,6 @@ class AuthController {
       final DocumentSnapshot<Map<String, dynamic>> doc =
           await db.collection('usuarios').doc(email).get();
       _user = UserModel.fromMap(doc.data());
-      print(_user!.name);
       saveUser(user);
       Navigator.of(context).pushReplacementNamed('/home', arguments: user);
     } on FirebaseAuthException catch (e, s) {

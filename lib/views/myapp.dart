@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:ludic/shared/models/tarefa_aluno_model.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/views/corrigir_tarefa/corrigir_tarefa_view.dart';
+import 'package:ludic/views/detalhes_tarefa_aluno/tarefa_aluno_view.dart';
 import 'package:ludic/views/home_page/homePage.dart';
 import 'package:ludic/views/lista_correcao/lista_correcao_view.dart';
 import 'package:ludic/views/register/escolherRegistro.dart';
@@ -15,7 +17,6 @@ import 'package:ludic/views/splash_screen/splash_screen.dart';
 import 'detalhes_tarefa_professor/tarefa_professor_view.dart';
 import 'entrar_sala/entrarSala.dart';
 import 'nova_sala/novaSala.dart';
-import 'detalhes_tarefa_aluno/tarefa_aluno_view.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({
@@ -118,12 +119,13 @@ class _AppWidgetState extends State<AppWidget> {
         '/sala': (context) => SalaView(),
         '/tarefa-professor': (context) => TarefaProfessor(
             tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
-        '/tarefa-aluno': (context) => TarefaAluno(
+        '/tarefa-aluno': (context) => TarefaAlunoView(
             tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
         '/lista-correcao': (context) => ListaCorrecao(
             tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
         '/corrigir-tarefa': (context) => CorrigirTarefa(
-            tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa)
+            tarefaAluno:
+                ModalRoute.of(context)!.settings.arguments as TarefaAluno)
       },
     );
   }

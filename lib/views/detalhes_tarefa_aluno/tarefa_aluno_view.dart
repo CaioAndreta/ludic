@@ -13,15 +13,15 @@ import 'package:ludic/shared/widgets/button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart';
 
-class TarefaAluno extends StatefulWidget {
-  TarefaAluno({Key? key, required this.tarefa}) : super(key: key);
+class TarefaAlunoView extends StatefulWidget {
+  TarefaAlunoView({Key? key, required this.tarefa}) : super(key: key);
   final Tarefa tarefa;
 
   @override
-  State<TarefaAluno> createState() => _TarefaAlunoState();
+  State<TarefaAlunoView> createState() => _TarefaAlunoState();
 }
 
-class _TarefaAlunoState extends State<TarefaAluno> {
+class _TarefaAlunoState extends State<TarefaAlunoView> {
   UploadTask? task;
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;

@@ -119,62 +119,33 @@ class _AddTarefasViewState extends State<AddTarefasView> {
                   return Column(
                     children: [
                       Card(
-                        child: Container(
-                          width: size.width,
-                          height: 100,
-                          color: AppColors.secondary,
-                          child: Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 10, 0, 0),
-                                      child: Text(
-                                          widget.tarefas[index]['nome']
-                                              .toString(),
-                                          style: TextStyles.cardTitle),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 15, 0, 0),
-                                    child: Text(
-                                        widget.tarefas[index]['descricao']
-                                            .toString(),
-                                        style: TextStyles.cardDesc),
-                                  )
-                                ],
-                              ),
-                              Expanded(child: Container()),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: PopupMenuButton(
-                                  color: AppColors.secondary,
-                                  itemBuilder: (_) => [
-                                    PopupMenuItem(
-                                        child: ListTile(
-                                            leading: Icon(Icons.edit,
-                                                color: AppColors.primary),
-                                            title: Text('Editar',
-                                                style: TextStyles
-                                                    .primaryHintText))),
-                                    PopupMenuItem(
-                                        child: ListTile(
-                                            onTap: () {
-                                              deleteTarefa(index);
-                                              Navigator.pop(context);
-                                            },
-                                            leading: Icon(Icons.delete,
-                                                color: AppColors.delete),
-                                            title: Text('Apagar',
-                                                style: TextStyle(
-                                                    color: AppColors.delete)))),
-                                  ],
-                                ),
-                              ),
+                        child: ListTile(
+                          title: Text(widget.tarefas[index]['nome'].toString(),
+                              style: TextStyles.cardTitle),
+                          subtitle: Text(
+                            widget.tarefas[index]['descricao'].toString(),
+                            style: TextStyles.cardDesc,
+                          ),
+                          trailing: PopupMenuButton(
+                            color: AppColors.secondary,
+                            itemBuilder: (_) => [
+                              PopupMenuItem(
+                                  child: ListTile(
+                                      leading: Icon(Icons.edit,
+                                          color: AppColors.primary),
+                                      title: Text('Editar',
+                                          style: TextStyles.primaryHintText))),
+                              PopupMenuItem(
+                                  child: ListTile(
+                                      onTap: () {
+                                        deleteTarefa(index);
+                                        Navigator.pop(context);
+                                      },
+                                      leading: Icon(Icons.delete,
+                                          color: AppColors.delete),
+                                      title: Text('Apagar',
+                                          style: TextStyle(
+                                              color: AppColors.delete)))),
                             ],
                           ),
                         ),

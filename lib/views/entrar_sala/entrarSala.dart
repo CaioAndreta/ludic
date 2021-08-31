@@ -105,15 +105,46 @@ class _EntrarSalaViewState extends State<EntrarSalaView> {
                                         .doc(doc.id)
                                         .collection('alunos')
                                         .doc(user.id)
-                                        .set({
-                                      'nome': user.name,
-                                      'email': user.email,
-                                      'id': user.id
+                                        .get()
+                                        .then((value) {
+                                      if (value.exists) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                    'Você já está inserido na sala!'),
+                                                actions: [
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: Text('OK'))
+                                                ],
+                                              );
+                                            });
+                                      } else {
+                                        db
+                                            .collection('salas')
+                                            .doc(doc.id)
+                                            .collection('alunos')
+                                            .doc(user.id)
+                                            .set({
+                                          'nome': user.name,
+                                          'email': user.email,
+                                          'id': user.id
+                                        });
+                                        db
+                                            .collection("salas")
+                                            .doc(doc.id)
+                                            .update({
+                                          'alunos': FieldValue.arrayUnion(
+                                              [user.email])
+                                        });
+                                        Navigator.of(context).pop();
+                                      }
                                     });
-                                    db.collection("salas").doc(doc.id).update({
-                                      'alunos': FieldValue.arrayUnion([user.email])
-                                    });
-                                    Navigator.of(context).pop();
                                   }),
                             ),
                           );

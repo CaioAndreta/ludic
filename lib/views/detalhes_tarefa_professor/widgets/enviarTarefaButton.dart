@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/inputField.dart';
 import 'package:ludic/views/detalhes_tarefa_professor/tarefa_professor_view.dart';
+import 'package:path/path.dart';
 
 class EnviarTarefaButton extends StatelessWidget {
   EnviarTarefaButton({
@@ -20,6 +25,7 @@ class EnviarTarefaButton extends StatelessWidget {
   final TarefaProfessor widget;
   final auth = FirebaseAuth.instance;
   Map<String, bool> alunosId = {};
+  UploadTask? task;
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +50,45 @@ class EnviarTarefaButton extends StatelessWidget {
             ),
             onPressed: () {
               DateTime selectedDate = DateTime.now();
+              File? file;
               showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
                   builder: (context) => StatefulBuilder(builder:
                           (BuildContext context, StateSetter setModalState) {
+                        final fileName = file != null
+                            ? basename(file!.path)
+                            : 'Nenhum arquivo selecionado';
+                        Future selectFile() async {
+                          final result = await FilePicker.platform.pickFiles();
+                          if (result == null) return;
+                          final path = result.files.single.path!;
+                          setModalState(() {
+                            file = File(path);
+                          });
+                        }
+
+                        UploadTask? dbUpload(String destination, File file) {
+                          try {
+                            final ref =
+                                FirebaseStorage.instance.ref(destination);
+                            return ref.putFile(file);
+                          } on FirebaseException catch (e) {
+                            return null;
+                          }
+                        }
+
+                        Future uploadFile() async {
+                          if (file == null) return;
+                          final fileName = basename(file!.path);
+                          final destination =
+                              '${widget.tarefa.codigoSala}/${widget.tarefa.nome}/$fileName';
+                          task = dbUpload(destination, file!);
+                          setModalState(() {});
+                          if (task == null) return;
+                        }
+
                         Future<void> _selectDate(BuildContext context) async {
                           final DateTime? picked = await showDatePicker(
                               context: context,
@@ -119,13 +158,24 @@ class EnviarTarefaButton extends StatelessWidget {
                                           ),
                                         ),
                                       ),
+                                      Column(
+                                        children: [
+                                          Button(
+                                            label: 'Selecione o Arquivo',
+                                            onPressed: selectFile,
+                                          ),
+                                          Text('$fileName',
+                                              style: TextStyles.blackHintText),
+                                        ],
+                                      )
                                     ],
                                   )
                                 ],
                               ),
                               Button(
                                   label: 'Enviar Tarefa',
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    await uploadFile();
                                     db.collection('salas')
                                       ..doc(widget.tarefa.codigoSala)
                                           .collection('alunos')

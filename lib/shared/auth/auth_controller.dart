@@ -109,10 +109,12 @@ class AuthController {
       final currUser = auth.currentUser;
       currUser!.updateDisplayName(name);
       final user = UserModel(name: name, email: email, id: currUser.uid);
-      db
-          .collection('usuarios')
-          .doc(email)
-          .set({'nome': name, 'email': email, 'isTeacher': false});
+      db.collection('usuarios').doc(email).set({
+        'nome': name,
+        'email': email,
+        'isTeacher': false,
+        'id': currUser.uid
+      });
       authController.saveUser(user);
       authController.setUser(context, user);
       Navigator.popUntil(context, ModalRoute.withName('/home'));
@@ -134,10 +136,12 @@ class AuthController {
       final currUser = auth.currentUser;
       currUser!.updateDisplayName(name);
       final user = UserModel(name: name, email: email, id: currUser.uid);
-      db
-          .collection('usuarios')
-          .doc(email)
-          .set({'nome': name, 'email': email, 'isTeacher': true});
+      db.collection('usuarios').doc(email).set({
+        'nome': name,
+        'email': email,
+        'isTeacher': true,
+        'id': currUser.uid
+      });
       authController.saveUser(user);
       authController.setUser(context, user);
       Navigator.popUntil(context, ModalRoute.withName('/home'));

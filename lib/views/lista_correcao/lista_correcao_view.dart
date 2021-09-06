@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/tarefa_aluno_model.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
+import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 
 class ListaCorrecao extends StatefulWidget {
@@ -44,7 +45,7 @@ class _ListaCorrecaoState extends State<ListaCorrecao> {
                     String name = doc['aluno'];
                     String email = doc['email'];
                     TarefaAluno tar =
-                        TarefaAluno(nomeAluno: name, path: path, email: email, codigoSala: widget.tarefa.codigoSala, nomeTarefa: widget.tarefa.nome);
+                        TarefaAluno(email: email, nomeAluno: name, tarefa: widget.tarefa);
                     Navigator.of(context)
                         .pushNamed('/corrigir-tarefa', arguments: tar);
                   },

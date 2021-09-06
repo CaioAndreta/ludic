@@ -1,14 +1,13 @@
+import 'package:ludic/shared/models/tarefa_model.dart';
+
 class TarefaAluno {
   String nomeAluno;
-  String nomeTarefa;
-  String? path;
   String email;
-  String codigoSala;
+  Tarefa tarefa;
 
-  TarefaAluno(
-      {required this.nomeAluno,
-      this.path,
-      required this.email,
-      required this.codigoSala,
-      required this.nomeTarefa});
+  TarefaAluno({
+    required this.nomeAluno,
+    required this.email,
+    required this.tarefa,
+  });
 }

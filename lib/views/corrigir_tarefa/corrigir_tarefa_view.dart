@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -43,7 +44,7 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
 
   void initState() {
     super.initState();
-    futureFiles = listAll('${widget.tarefaAluno.path}');
+    futureFiles = listAll('${widget.tarefaAluno.tarefa.path}');
   }
 
   @override
@@ -136,7 +137,7 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
                               (BuildContext context,
                                   StateSetter setModalState) {
                             return Container(
-                              height: size.height * 0.8,
+                              height: size.height * 0.5,
                               decoration: BoxDecoration(
                                   color: AppColors.secondaryDark,
                                   borderRadius: BorderRadius.only(
@@ -165,13 +166,20 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
                                       onPressed: () {
                                         db
                                             .collection('salas')
-                                            .doc(widget.tarefaAluno.codigoSala)
+                                            .doc(widget
+                                                .tarefaAluno.tarefa.codigoSala)
                                             .collection('tarefas')
-                                            .doc(widget.tarefaAluno.nomeTarefa)
+                                            .doc(widget.tarefaAluno.tarefa.nome)
                                             .collection('entregues')
                                             .doc(widget.tarefaAluno.email)
                                             .update({
                                           'nota': int.parse(notaController.text)
+                                        });
+                                        db
+                                            .collection('usuarios')
+                                            .doc(widget.tarefaAluno.email)
+                                            .update({
+                                          'xp': FieldValue.increment(100)
                                         });
                                         Navigator.popUntil(context,
                                             ModalRoute.withName('/sala'));

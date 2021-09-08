@@ -53,7 +53,10 @@ class HomeDrawer extends StatelessWidget {
                       ListTile(
                         leading: Icon(Icons.settings),
                         title: Text('Configurações da conta'),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/update-usuario',
+                              arguments: userInfo);
+                        },
                       ),
                     ],
                   ),

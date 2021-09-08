@@ -14,6 +14,7 @@ class Perfil extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int xpAtual = 30;
+    int xpNivel = 300;
     return Container(
       color: AppColors.secondary,
       height: double.infinity,
@@ -52,14 +53,14 @@ class Perfil extends StatelessWidget {
                   backgroundColor: AppColors.secondaryDark,
                   color: AppColors.primary,
                   minHeight: 10,
-                  value: xpAtual / 100,
+                  value: xpAtual / xpNivel,
                 ),
               ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 30),
                 padding: EdgeInsets.only(bottom: 30),
                 child: Text(
-                  '$xpAtual/100 XP',
+                  '$xpAtual/$xpNivel XP',
                   style: TextStyles.blackHintText,
                 ),
               ),

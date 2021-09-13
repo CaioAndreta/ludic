@@ -25,7 +25,12 @@ class _AppFirebaseState extends State<AppFirebase> {
   void initState() {
     super.initState();
 
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top]);
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemStatusBarContrastEnforced: true,
+    statusBarColor: Colors.transparent, // status bar color
+  ));
   }
 
   @override

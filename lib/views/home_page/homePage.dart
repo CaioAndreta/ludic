@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:ludic/shared/models/sala_model.dart';
@@ -7,6 +8,7 @@ import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/views/home_page/widgets/HomeDrawer.dart';
 import 'package:ludic/views/home_page/telas/perfil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
@@ -95,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                           var doc = snapshot.data!.docs[index];
                           return Container(
                             padding: EdgeInsets.all(5),
-                            height: 250,
+                            height: 200,
                             width: double.infinity,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
@@ -127,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                           );
                         });
                   }),
-              Perfil(userInfo: widget),
+              Perfil(userInfo: widget.user),
             ]),
           )),
     );

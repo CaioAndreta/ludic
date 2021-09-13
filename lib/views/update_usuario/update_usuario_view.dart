@@ -43,7 +43,7 @@ class UpdateUsuarioView extends StatelessWidget {
                     user = UserModel(
                         email: user.email,
                         id: user.id,
-                        name: _nameController.text.toUpperCase().trim());
+                        name: _nameController.text.toUpperCase().trim(), xp: user.xp);
                     Navigator.of(context).pushNamed('/home', arguments: user);
                   }
                 })

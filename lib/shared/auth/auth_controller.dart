@@ -108,7 +108,7 @@ class AuthController {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       final currUser = auth.currentUser;
       currUser!.updateDisplayName(name);
-      final user = UserModel(name: name, email: email, id: currUser.uid);
+      final user = UserModel(name: name, email: email, id: currUser.uid, xp: 0);
       db.collection('usuarios').doc(email).set({
         'nome': name,
         'email': email,
@@ -135,7 +135,7 @@ class AuthController {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       final currUser = auth.currentUser;
       currUser!.updateDisplayName(name);
-      final user = UserModel(name: name, email: email, id: currUser.uid);
+      final user = UserModel(name: name, email: email, id: currUser.uid, xp: 0);
       db.collection('usuarios').doc(email).set({
         'nome': name,
         'email': email,

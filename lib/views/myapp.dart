@@ -127,7 +127,7 @@ class _AppWidgetState extends State<AppWidget> {
         '/corrigir-tarefa': (context) => CorrigirTarefa(
             tarefaAluno:
                 ModalRoute.of(context)!.settings.arguments as TarefaAluno),
-                '/update-usuario': (context) => UpdateUsuarioView(
+        '/update-usuario': (context) => UpdateUsuarioView(
             user: ModalRoute.of(context)!.settings.arguments as UserModel)
       },
     );

@@ -4,11 +4,13 @@ class UserModel {
   String? id;
   String? name;
   String? email;
+  int xp;
 
   UserModel({
     required this.name,
     required this.email,
     required this.id,
+    required this.xp
   });
 
   factory UserModel.fromMap(Map<String, dynamic>? map) {
@@ -16,6 +18,7 @@ class UserModel {
       id: map!['id'],
       name: map['nome'],
       email: map['email'],
+      xp: map['xp'],
     );
   }
 
@@ -26,6 +29,7 @@ class UserModel {
         'id': id,
         'nome': name,
         'email': email,
+        'xp': xp,
       };
   String toJson() => jsonEncode(toMap());
 }

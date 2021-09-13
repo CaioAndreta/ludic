@@ -1,8 +1,8 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:ludic/shared/models/firebaseFile.dart';
 import 'package:ludic/shared/models/tarefa_aluno_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
@@ -102,7 +102,36 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
                               ),
                             );
                           }),
-                    )
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        'Data de Conclusão',
+                        style: TextStyles.blackHintText,
+                      ),
+                    ),
+                    Text(
+                      DateFormat('dd/MM/yy')
+                          .format(widget.tarefaAluno.dataConclusao.toDate())
+                          .toString(),
+                      style: TextStyles.blackTitleText,
+                    ),
+                    widget.tarefaAluno.dataConclusao
+                                .toDate()
+                                .difference(
+                                    widget.tarefaAluno.dataEntrega.toDate())
+                                .inDays <
+                            0
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                                '(entregue ${(widget.tarefaAluno.dataConclusao.toDate().difference(widget.tarefaAluno.dataEntrega.toDate()).inDays) * -1} dias atrasado)',
+                                style: TextStyles.blackHintText))
+                        : Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                                '(entregue ${widget.tarefaAluno.dataConclusao.toDate().difference(widget.tarefaAluno.dataEntrega.toDate()).inDays} dias adiantado)',
+                                style: TextStyles.blackHintText))
                   ],
                 ),
               );
@@ -175,12 +204,27 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
                                             .update({
                                           'nota': int.parse(notaController.text)
                                         });
-                                        db
-                                            .collection('usuarios')
-                                            .doc(widget.tarefaAluno.email)
-                                            .update({
-                                          'xp': FieldValue.increment(100)
-                                        });
+                                        if (widget.tarefaAluno.dataConclusao
+                                                .toDate()
+                                                .difference(widget
+                                                    .tarefaAluno.dataEntrega
+                                                    .toDate())
+                                                .inDays >
+                                            0)
+                                          db
+                                              .collection('usuarios')
+                                              .doc(widget.tarefaAluno.email)
+                                              .update({
+                                            'xp': FieldValue.increment(100 +
+                                                widget.tarefaAluno.dataConclusao
+                                                        .toDate()
+                                                        .difference(widget
+                                                            .tarefaAluno
+                                                            .dataEntrega
+                                                            .toDate())
+                                                        .inDays *
+                                                    5)
+                                          });
                                         Navigator.popUntil(context,
                                             ModalRoute.withName('/sala'));
                                       })

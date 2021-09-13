@@ -40,14 +40,18 @@ class _ListaCorrecaoState extends State<ListaCorrecao> {
                 var doc = snapshot.data!.docs[index];
                 return GestureDetector(
                   onTap: () {
-                    String path =
-                        '${widget.tarefa.codigoSala}/${widget.tarefa.nome}/alunos/${doc["email"]}';
                     String name = doc['aluno'];
                     String email = doc['email'];
-                    TarefaAluno tar =
-                        TarefaAluno(email: email, nomeAluno: name, tarefa: widget.tarefa);
+                    Timestamp dataConclusao = doc['data de conclusao'];
+                    Timestamp dataEntrega = doc['data de entrega'];
+                    TarefaAluno tarAluno = TarefaAluno(
+                        email: email,
+                        nomeAluno: name,
+                        tarefa: widget.tarefa,
+                        dataConclusao: dataConclusao,
+                        dataEntrega: dataEntrega);
                     Navigator.of(context)
-                        .pushNamed('/corrigir-tarefa', arguments: tar);
+                        .pushNamed('/corrigir-tarefa', arguments: tarAluno);
                   },
                   child: Card(
                     child: ListTile(

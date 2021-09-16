@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/user_model.dart';
+import 'package:ludic/shared/themes/app_colors.dart';
+import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController {
@@ -46,12 +48,20 @@ class AuthController {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-              title: Text(msg),
+              title: Text(
+                'Erro de Login!',
+                style: TextStyles.blackBoldTitleText,
+              ),
+              content: Text(
+                msg,
+                style: TextStyles.blackHintText,
+              ),
               actions: [
                 ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
+                    style: ElevatedButton.styleFrom(primary: AppColors.primary),
                     child: Text('OK'))
               ],
             ));

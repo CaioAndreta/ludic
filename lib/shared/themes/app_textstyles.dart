@@ -12,6 +12,8 @@ class TextStyles {
   static final primaryHintText = GoogleFonts.dmSans(color: AppColors.primary);
   static final blackTitleText =
       GoogleFonts.dmSans(color: AppColors.dark, fontSize: 24);
+  static final blackBoldTitleText = GoogleFonts.dmSans(
+      color: AppColors.dark, fontSize: 24, fontWeight: FontWeight.bold);
   static final blackHintText =
       GoogleFonts.dmSans(color: Color(0xff525252), fontSize: 16);
   static final secondaryHintText =

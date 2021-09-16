@@ -65,7 +65,7 @@ class _SalaViewState extends State<SalaView> {
         );
 
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         backgroundColor: AppColors.secondary,
         appBar: AppBar(),
@@ -292,7 +292,40 @@ class _SalaViewState extends State<SalaView> {
                         );
                       });
                 }),
-          )
+          ),
+          StreamBuilder<QuerySnapshot>(
+              stream: db
+                  .collection('salas')
+                  .doc(sala.codigo)
+                  .collection('leaderboard')
+                  .orderBy('pontos')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return ListView(
+                  padding: EdgeInsets.all(20),
+                  children: [
+                    Center(
+                        child: Text('Scoreboard',
+                            style: TextStyles.primaryTitleText)),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (_, index) {
+                          var doc = snapshot.data!.docs[index];
+                          return ListTile(
+                            title: Text(doc['nome']),
+                            trailing: Text(
+                              doc['pontos'].toString(),
+                              style: TextStyles.blackHintText,
+                            ),
+                          );
+                        }),
+                  ],
+                );
+              })
         ]),
         bottomNavigationBar: BottomMenu(),
       ),

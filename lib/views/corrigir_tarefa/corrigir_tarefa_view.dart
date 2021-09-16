@@ -210,12 +210,14 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
                                                     .tarefaAluno.dataEntrega
                                                     .toDate())
                                                 .inDays >
-                                            0)
+                                            0) {
                                           db
                                               .collection('usuarios')
                                               .doc(widget.tarefaAluno.email)
                                               .update({
-                                            'xp': FieldValue.increment(100 +
+                                            'xp': FieldValue.increment(10 *
+                                                    int.parse(
+                                                        notaController.text) +
                                                 widget.tarefaAluno.dataConclusao
                                                         .toDate()
                                                         .difference(widget
@@ -223,8 +225,28 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
                                                             .dataEntrega
                                                             .toDate())
                                                         .inDays *
-                                                    5)
+                                                    5),
                                           });
+                                          db
+                                              .collection('salas')
+                                              .doc(widget.tarefaAluno.tarefa
+                                                  .codigoSala)
+                                              .collection('leaderboard')
+                                              .doc(widget.tarefaAluno.email)
+                                              .update({
+                                            'pontos': FieldValue.increment(100 *
+                                                    int.parse(
+                                                        notaController.text) +
+                                                widget.tarefaAluno.dataConclusao
+                                                        .toDate()
+                                                        .difference(widget
+                                                            .tarefaAluno
+                                                            .dataEntrega
+                                                            .toDate())
+                                                        .inDays *
+                                                    50)
+                                          });
+                                        }
                                         Navigator.popUntil(context,
                                             ModalRoute.withName('/sala'));
                                       })

@@ -142,6 +142,15 @@ class _EntrarSalaViewState extends State<EntrarSalaView> {
                                           'alunos': FieldValue.arrayUnion(
                                               [user.email])
                                         });
+                                        db
+                                            .collection('salas')
+                                            .doc(doc.id)
+                                            .collection('leaderboard')
+                                            .doc(user.email)
+                                            .update({
+                                          'pontos': 0,
+                                          'nome': user.name
+                                        });
                                         Navigator.of(context).pop();
                                       }
                                     });

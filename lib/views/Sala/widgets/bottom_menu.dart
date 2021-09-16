@@ -38,6 +38,11 @@ class BottomMenu extends StatelessWidget {
               child: Center(
                   child: Text('Corrigir tarefas',
                       style: TextStyles.primaryHintText))),
+          Container(
+              height: size.height * 0.1,
+              child: Center(
+                  child:
+                      Text('Scoreboard', style: TextStyles.primaryHintText))),
         ],
       ),
     );

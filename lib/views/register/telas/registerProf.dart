@@ -84,7 +84,7 @@ class _RegisterProfViewState extends State<RegisterProfView> {
                   onPressed: () {
                     final authController = AuthController();
                     if (_formKey.currentState!.validate())
-                      authController.profRegister(context,
+                      authController.userRegister(context,
                           email: _emailController.text,
                           password: _passwordController.text,
                           name: _nameController.text);

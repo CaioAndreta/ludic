@@ -24,10 +24,9 @@ class AuthController {
     }
   }
 
-  Future<void> saveUser(UserModel user) async {
+  Future<void> saveUser(String userEmail) async {
     final instance = await SharedPreferences.getInstance();
-    await instance.setString('user', user.toJson());
-    print(user.toJson());
+    await instance.setString('user', userEmail);
     return;
   }
 
@@ -35,8 +34,9 @@ class AuthController {
     await Future.delayed(Duration(seconds: 2));
     final instance = await SharedPreferences.getInstance();
     if (instance.containsKey('user')) {
-      final json = instance.get('user') as String;
-      var user = UserModel.fromJson(json);
+      var userData =
+          await db.collection('usuarios').doc(instance.getString('user')).get();
+      var user = UserModel.fromMap(userData.data());
       setUser(context, user);
       return;
     } else {
@@ -98,15 +98,16 @@ class AuthController {
       await auth.signInWithEmailAndPassword(email: email, password: senha);
       final DocumentSnapshot<Map<String, dynamic>> doc =
           await db.collection('usuarios').doc(email).get();
+      print('id do doc: ' + doc.id);
       _user = UserModel.fromMap(doc.data());
-      saveUser(user);
+      saveUser(doc.id);
       Navigator.of(context).pushReplacementNamed('/home', arguments: user);
     } on FirebaseAuthException catch (e, s) {
       captureErrors(context, e, s);
     }
   }
 
-  alunoRegister(BuildContext context,
+  userRegister(BuildContext context,
       {required String email,
       required String password,
       required String name}) async {
@@ -119,40 +120,11 @@ class AuthController {
       final currUser = auth.currentUser;
       currUser!.updateDisplayName(name);
       final user = UserModel(name: name, email: email, id: currUser.uid, xp: 0);
-      db.collection('usuarios').doc(email).set({
-        'nome': name,
-        'email': email,
-        'isTeacher': false,
-        'id': currUser.uid
-      });
-      authController.saveUser(user);
-      authController.setUser(context, user);
-      Navigator.popUntil(context, ModalRoute.withName('/home'));
-    } on FirebaseAuthException catch (e, s) {
-      captureErrors(context, e, s);
-    }
-  }
-
-  profRegister(BuildContext context,
-      {required String email,
-      required String password,
-      required String name}) async {
-    try {
-      name = name.toUpperCase().trim();
-      final authController = AuthController();
-      await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      await auth.signInWithEmailAndPassword(email: email, password: password);
-      final currUser = auth.currentUser;
-      currUser!.updateDisplayName(name);
-      final user = UserModel(name: name, email: email, id: currUser.uid, xp: 0);
-      db.collection('usuarios').doc(email).set({
-        'nome': name,
-        'email': email,
-        'isTeacher': true,
-        'id': currUser.uid
-      });
-      authController.saveUser(user);
+      db
+          .collection('usuarios')
+          .doc(email)
+          .set({'nome': name, 'email': email, 'id': currUser.uid});
+      authController.saveUser(email);
       authController.setUser(context, user);
       Navigator.popUntil(context, ModalRoute.withName('/home'));
     } on FirebaseAuthException catch (e, s) {

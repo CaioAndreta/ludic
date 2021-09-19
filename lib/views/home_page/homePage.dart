@@ -106,7 +106,8 @@ class _HomePageState extends State<HomePage> {
                                   Sala sala = Sala(
                                     codigo: doc['codigo'],
                                     nome: doc['nome'],
-                                    professor: doc['professor'],
+                                    professor: doc['teacherName'],
+                                    isTeacher: widget.user.email == doc['teacherEmail'] ? true : false
                                   );
                                   Navigator.of(context)
                                       .pushNamed('/sala', arguments: sala);

@@ -5,9 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:ludic/shared/models/sala_model.dart';
-import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
@@ -16,6 +14,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:ludic/views/Sala/telas/listaAlunos.dart';
 import 'package:ludic/views/Sala/telas/listaTarefas.dart';
 import 'package:ludic/views/Sala/widgets/bottom_menu.dart';
+import 'package:ludic/views/sala/telas/scoreboard.dart';
+import 'package:ludic/views/sala/telas/tarefasEntreguesAluno.dart';
+import 'package:ludic/views/sala/telas/tarefasEnviadasProf.dart';
 import 'package:path/path.dart';
 
 class SalaView extends StatefulWidget {
@@ -64,272 +65,126 @@ class _SalaViewState extends State<SalaView> {
           },
         );
 
-    return DefaultTabController(
-      length: 5,
-      child: Scaffold(
-        backgroundColor: AppColors.secondary,
-        appBar: AppBar(),
-        body: TabBarView(children: [
-          Scaffold(
-            backgroundColor: AppColors.secondaryDark,
-            floatingActionButton: ElevatedButton(
-              child: Icon(Icons.add, color: AppColors.secondary),
-              style: ElevatedButton.styleFrom(
-                shape: CircleBorder(),
-                padding: EdgeInsets.all(20),
-                primary: AppColors.primary,
-              ),
-              onPressed: () async {
-                File? file;
-                final _formKey = GlobalKey<FormState>();
-                TextEditingController _nameController = TextEditingController();
-                TextEditingController _descController = TextEditingController();
-                await addTarefaBottomSheet(context, file, sala, _nameController,
-                    size, _formKey, _descController, uploadStatus, addTarefa);
-              },
-            ),
-            body: Form(
-              child: ListaTarefas(db: db, sala: sala),
-            ),
-          ),
-          ListaAlunos(db: db, sala: sala),
-          Center(
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              color: AppColors.secondaryDark,
-              child: Column(
-                children: [
-                  Text('Não entregues', style: TextStyles.primaryTitleText),
-                  StreamBuilder(
-                      stream: db
-                          .collection('salas')
-                          .doc(sala.codigo)
-                          .collection('tarefas')
-                          .where('entregues.${auth.currentUser!.uid}',
-                              isEqualTo: false)
-                          .snapshots(),
-                      builder:
-                          (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                              child: CircularProgressIndicator(
-                                  color: AppColors.primary));
-                        }
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (_, index) {
-                              var doc = snapshot.data!.docs[index];
-                              return Container(
-                                padding: EdgeInsets.symmetric(vertical: 5),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    String tarNome = doc['nome'];
-                                    String tarDesc = doc['descricao'];
-                                    String tarPath = '${sala.codigo}/$tarNome';
-                                    Tarefa tarefa = Tarefa(
-                                        nome: tarNome,
-                                        descricao: tarDesc,
-                                        path: tarPath,
-                                        codigoSala: sala.codigo);
-                                    Navigator.of(context).pushNamed(
-                                        '/tarefa-aluno',
-                                        arguments: tarefa);
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Container(
-                                        color: AppColors.secondary,
-                                        child: ListTile(
-                                          title: Text(doc['nome'],
-                                              style: TextStyles.blackTitleText),
-                                          subtitle: Text(
-                                              'Vence em ' +
-                                                  DateFormat('dd/MM/yy')
-                                                      .format(
-                                                          doc['data de conclusao']
-                                                              .toDate())
-                                                      .toString(),
-                                              style: TextStyles.blackHintText),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            });
-                      }),
-                  Text('Entregues', style: TextStyles.primaryTitleText),
-                  StreamBuilder(
-                      stream: db
-                          .collection('salas')
-                          .doc(sala.codigo)
-                          .collection('tarefas')
-                          .where('entregues.${auth.currentUser!.uid}',
-                              isEqualTo: true)
-                          .snapshots(),
-                      builder:
-                          (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                              child: CircularProgressIndicator(
-                                  color: AppColors.primary));
-                        }
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (_, index) {
-                              var doc = snapshot.data!.docs[index];
-                              return Container(
-                                padding: EdgeInsets.symmetric(vertical: 5),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    String tarNome = doc['nome'];
-                                    String tarDesc = doc['descricao'];
-                                    String tarPath = '${sala.codigo}/$tarNome';
-                                    Tarefa tarefa = Tarefa(
-                                        nome: tarNome,
-                                        descricao: tarDesc,
-                                        path: tarPath,
-                                        codigoSala: sala.codigo);
-                                    Navigator.of(context).pushNamed(
-                                        '/tarefa-aluno',
-                                        arguments: tarefa);
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Container(
-                                        color: AppColors.secondary,
-                                        child: ListTile(
-                                          title: Text(doc['nome'],
-                                              style: TextStyles.blackTitleText),
-                                          subtitle: Text(
-                                              'Venceu em ' +
-                                                  DateFormat('dd/MM/yy')
-                                                      .format(
-                                                          doc['data de conclusao']
-                                                              .toDate())
-                                                      .toString(),
-                                              style: TextStyles.blackHintText),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            });
-                      }),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            color: AppColors.secondaryDark,
-            child: StreamBuilder(
-                stream: db
-                    .collection('salas')
-                    .doc(sala.codigo)
-                    .collection('tarefas')
-                    .where('entregues.${auth.currentUser!.uid}',
-                        isEqualTo: true)
-                    .snapshots(),
-                builder: (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                        child: CircularProgressIndicator(
-                            color: AppColors.primary));
-                  }
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (_, index) {
-                        var doc = snapshot.data!.docs[index];
-                        return Container(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    String tarNome = doc['nome'];
-                                    Tarefa tarefa = Tarefa(
-                                        nome: tarNome, codigoSala: sala.codigo);
-                                    Navigator.of(context).pushNamed(
-                                        '/lista-correcao',
-                                        arguments: tarefa);
-                                  },
-                                  child: Container(
-                                    color: AppColors.secondary,
-                                    child: ListTile(
-                                      title: Text(doc['nome'],
-                                          style: TextStyles.blackTitleText),
-                                      subtitle: Text(
-                                          'Vencimento: ' +
-                                              DateFormat('dd/MM/yy')
-                                                  .format(
-                                                      doc['data de conclusao']
-                                                          .toDate())
-                                                  .toString(),
-                                          style: TextStyles.blackHintText),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      });
-                }),
-          ),
-          StreamBuilder<QuerySnapshot>(
-              stream: db
-                  .collection('salas')
-                  .doc(sala.codigo)
-                  .collection('leaderboard')
-                  .orderBy('pontos')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                return ListView(
+    if (sala.isTeacher == true) {
+      return DefaultTabController(
+        length: 4,
+        child: Scaffold(
+          backgroundColor: AppColors.secondary,
+          appBar: AppBar(),
+          body: TabBarView(children: [
+            Scaffold(
+              backgroundColor: AppColors.secondaryDark,
+              floatingActionButton: ElevatedButton(
+                child: Icon(Icons.add, color: AppColors.secondary),
+                style: ElevatedButton.styleFrom(
+                  shape: CircleBorder(),
                   padding: EdgeInsets.all(20),
-                  children: [
-                    Center(
+                  primary: AppColors.primary,
+                ),
+                onPressed: () async {
+                  File? file;
+                  final _formKey = GlobalKey<FormState>();
+                  TextEditingController _nameController =
+                      TextEditingController();
+                  TextEditingController _descController =
+                      TextEditingController();
+                  await addTarefaBottomSheet(
+                      context,
+                      file,
+                      sala,
+                      _nameController,
+                      size,
+                      _formKey,
+                      _descController,
+                      uploadStatus,
+                      addTarefa);
+                },
+              ),
+              body: Form(
+                child: ListaTarefas(db: db, sala: sala),
+              ),
+            ),
+            TarefasEnviadasProf(auth: auth, db: db, sala: sala),
+            Scoreboard(sala: sala, db: db),
+            ListaAlunos(db: db, sala: sala),
+          ]),
+          bottomNavigationBar: Material(
+            color: AppColors.secondary,
+            child: TabBar(
+              indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(width: 3, color: AppColors.primary),
+                  insets: EdgeInsets.symmetric(horizontal: 16.0)),
+              indicatorColor: AppColors.primary,
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+              tabs: [
+                Container(
+                    height: size.height * 0.1,
+                    child: Center(
+                        child: Text('Tarefas',
+                            style: TextStyles.primaryHintText))),
+                Container(
+                    height: size.height * 0.1,
+                    child: Center(
+                        child: Text('Corrigir tarefas',
+                            style: TextStyles.primaryHintText))),
+                Container(
+                    height: size.height * 0.1,
+                    child: Center(
                         child: Text('Scoreboard',
-                            style: TextStyles.primaryTitleText)),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (_, index) {
-                          var doc = snapshot.data!.docs[index];
-                          return ListTile(
-                            title: Text(doc['nome']),
-                            trailing: Text(
-                              doc['pontos'].toString(),
-                              style: TextStyles.blackHintText,
-                            ),
-                          );
-                        }),
-                  ],
-                );
-              })
-        ]),
-        bottomNavigationBar: BottomMenu(),
-      ),
-    );
+                            style: TextStyles.primaryHintText))),
+                Container(
+                    height: size.height * 0.1,
+                    child: Center(
+                        child:
+                            Text('Sala', style: TextStyles.primaryHintText))),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      return DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          backgroundColor: AppColors.secondary,
+          appBar: AppBar(),
+          body: TabBarView(children: [
+            TarefasEntreguesAluno(auth: auth, sala: sala, db: db),
+            Scoreboard(sala: sala, db: db),
+            ListaAlunos(db: db, sala: sala),
+          ]),
+          bottomNavigationBar: Material(
+            color: AppColors.secondary,
+            child: TabBar(
+              indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(width: 3, color: AppColors.primary),
+                  insets: EdgeInsets.symmetric(horizontal: 16.0)),
+              indicatorColor: AppColors.primary,
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+              tabs: [
+                Container(
+                    height: size.height * 0.1,
+                    child: Center(
+                        child: Text('Tarefas enviadas',
+                            style: TextStyles.primaryHintText))),
+                Container(
+                    height: size.height * 0.1,
+                    child: Center(
+                        child: Text('Scoreboard',
+                            style: TextStyles.primaryHintText))),
+                Container(
+                    height: size.height * 0.1,
+                    child: Center(
+                        child:
+                            Text('Sala', style: TextStyles.primaryHintText))),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   addTarefaBottomSheet(

@@ -1,20 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 class Sala {
   final auth = FirebaseAuth.instance;
   String codigo = '';
   String nome = '';
   String professor = '';
-  String docId;
-  bool isTeacher = false;
+  bool isTeacher;
 
   Sala(
       {required this.nome,
       required this.professor,
       required this.codigo,
-      this.docId = ''});
+      required this.isTeacher});
 
-      // getTeacher(){
-      //   if(auth.currentUser.email)
-      // }
+  getTeacher(String userEmail, String teacherEmail) {
+    return userEmail == teacherEmail ? true : false;
+  }
 }

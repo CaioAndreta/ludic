@@ -103,8 +103,9 @@ class _NovaSalaViewState extends State<NovaSalaView> {
                       db.collection('salas').doc(codigoSala).set({
                         'nome': nameSalaController.text,
                         'codigo': codigoSala,
-                        'professor': user.name,
-                        'alunos': [user.email]
+                        'teacherName': user.name,
+                        'teacherEmail': user.email,
+                        'alunos': []
                       });
                       tarefas.forEach((element) {
                         db

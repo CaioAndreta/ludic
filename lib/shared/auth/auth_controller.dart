@@ -44,12 +44,12 @@ class AuthController {
     }
   }
 
-  static showPopUp(BuildContext context, String msg) {
+  static showPopUp(BuildContext context, String title, String msg) {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
               title: Text(
-                'Erro de Login!',
+                title,
                 style: TextStyles.blackBoldTitleText,
               ),
               content: Text(
@@ -71,19 +71,19 @@ class AuthController {
       BuildContext context, FirebaseAuthException e, StackTrace s) {
     if (e.code == 'user-disabled') {
       String erroMsg = 'O usuário informado está desabilitado.';
-      showPopUp(context, erroMsg);
+      showPopUp(context, 'Erro de Login!', erroMsg);
     } else if (e.code == 'user-not-found') {
       String erroMsg = 'O usuário informado não está cadastrado.';
-      showPopUp(context, erroMsg);
+      showPopUp(context, 'Erro de Login!', erroMsg);
     } else if (e.code == 'invalid-email') {
       String erroMsg = 'O domínio do e-mail informado é inválido.';
-      showPopUp(context, erroMsg);
+      showPopUp(context, 'Erro de Cadastro!', erroMsg);
     } else if (e.code == 'wrong-password') {
       String erroMsg = 'Email ou senha informados estão incorretos';
-      showPopUp(context, erroMsg);
+      showPopUp(context, 'Erro de Login!', erroMsg);
     } else if (e.code == 'email-already-in-use') {
       String erroMsg = 'Este e-mail já está em uso';
-      showPopUp(context, erroMsg);
+      showPopUp(context, 'Erro de Cadastro!', erroMsg);
     } else {
       return null;
     }
@@ -96,12 +96,17 @@ class AuthController {
   ) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: senha);
-      final DocumentSnapshot<Map<String, dynamic>> doc =
-          await db.collection('usuarios').doc(email).get();
-      print('id do doc: ' + doc.id);
-      _user = UserModel.fromMap(doc.data());
-      saveUser(doc.id);
-      Navigator.of(context).pushReplacementNamed('/home', arguments: user);
+      if (auth.currentUser!.emailVerified == true) {
+        final DocumentSnapshot<Map<String, dynamic>> doc =
+            await db.collection('usuarios').doc(email).get();
+        _user = UserModel.fromMap(doc.data());
+        saveUser(doc.id);
+        Navigator.of(context).pushReplacementNamed('/home', arguments: user);
+      } else {
+        await auth.signOut();
+        showPopUp(context, 'Verifique o seu E-mail!',
+            'Um e-mail foi enviado para $email. Confirme o cadastro da sua conta para continuar utilizando o Ludic.');
+      }
     } on FirebaseAuthException catch (e, s) {
       captureErrors(context, e, s);
     }
@@ -119,11 +124,12 @@ class AuthController {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       final currUser = auth.currentUser;
       currUser!.updateDisplayName(name);
+      currUser.sendEmailVerification();
       final user = UserModel(name: name, email: email, id: currUser.uid, xp: 0);
       db
           .collection('usuarios')
           .doc(email)
-          .set({'nome': name, 'email': email, 'id': currUser.uid});
+          .set({'nome': name, 'email': email, 'id': currUser.uid, 'xp': 0});
       authController.saveUser(email);
       authController.setUser(context, user);
       Navigator.popUntil(context, ModalRoute.withName('/home'));

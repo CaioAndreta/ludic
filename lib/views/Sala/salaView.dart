@@ -13,7 +13,6 @@ import 'package:ludic/shared/widgets/inputField.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:ludic/views/Sala/telas/listaAlunos.dart';
 import 'package:ludic/views/Sala/telas/listaTarefas.dart';
-import 'package:ludic/views/Sala/widgets/bottom_menu.dart';
 import 'package:ludic/views/sala/telas/scoreboard.dart';
 import 'package:ludic/views/sala/telas/tarefasEntreguesAluno.dart';
 import 'package:ludic/views/sala/telas/tarefasEnviadasProf.dart';

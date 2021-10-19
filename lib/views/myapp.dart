@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ludic/shared/models/tarefa_aluno_model.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
@@ -74,6 +75,19 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> {
+  
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+      systemStatusBarContrastEnforced: true,
+      statusBarColor: Colors.transparent,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -102,7 +116,7 @@ class _AppWidgetState extends State<AppWidget> {
           ),
           appBarTheme: AppBarTheme(
             centerTitle: true,
-            backgroundColor: Colors.transparent,
+            backgroundColor: AppColors.secondary,
             shadowColor: Colors.transparent,
             titleTextStyle: TextStyle(color: AppColors.primary),
             iconTheme: IconThemeData(color: AppColors.primary),
@@ -114,7 +128,7 @@ class _AppWidgetState extends State<AppWidget> {
             user: ModalRoute.of(context)!.settings.arguments as UserModel),
         '/login': (context) => LoginPage(),
         '/escolher-registro': (context) => EscolherRegistroView(),
-        '/register': (context) => RegisterView(),
+        '/register': (context) => Register(),
         '/nova-sala': (context) => NovaSalaView(),
         '/entrar-sala': (context) => EntrarSalaView(),
         '/sala': (context) => SalaView(),

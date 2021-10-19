@@ -7,20 +7,20 @@ import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/inputField.dart';
 
-class RegisterProfView extends StatefulWidget {
-  const RegisterProfView({Key? key}) : super(key: key);
+class RegisterView extends StatefulWidget {
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
-  _RegisterProfViewState createState() => _RegisterProfViewState();
+  _RegisterViewState createState() => _RegisterViewState();
 }
 
-class _RegisterProfViewState extends State<RegisterProfView> {
+class _RegisterViewState extends State<RegisterView> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _nameController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
     return Center(
       child: SingleChildScrollView(
         reverse: true,
@@ -31,7 +31,7 @@ class _RegisterProfViewState extends State<RegisterProfView> {
             children: [
               Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Text('REGISTRAR NOVO PROFESSOR',
+                  child: Text('REGISTRAR NOVA CONTA',
                       style: TextStyles.primaryTitleText)),
               InputField(
                 label: 'Nome',

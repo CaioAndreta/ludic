@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -30,6 +28,8 @@ class _AppFirebaseState extends State<AppFirebase> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
       systemStatusBarContrastEnforced: true,
       statusBarColor: Colors.transparent,
     ));
@@ -41,19 +41,21 @@ class _AppFirebaseState extends State<AppFirebase> {
       future: Firebase.initializeApp(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          if(kIsWeb)
-          return Material(
-            child: Center(
-              child: Text(
-                'Não foi possível inicializar o Firebase',
-                textDirection: TextDirection.ltr,
-                style: TextStyles.primaryCodigoSala,
+          if (kIsWeb)
+            return Material(
+              child: Center(
+                child: Text(
+                  'Não foi possível inicializar o Firebase',
+                  textDirection: TextDirection.ltr,
+                  style: TextStyles.primaryCodigoSala,
+                ),
               ),
-            ),
-          );
+            );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          appCheck();
+          if (!kIsWeb) {
+            appCheck();
+          }
           return GestureDetector(
             child: AppWidget(),
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

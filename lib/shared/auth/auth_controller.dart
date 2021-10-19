@@ -132,7 +132,7 @@ class AuthController {
           .set({'nome': name, 'email': email, 'id': currUser.uid, 'xp': 0});
       authController.saveUser(email);
       authController.setUser(context, user);
-      Navigator.popUntil(context, ModalRoute.withName('/home'));
+      Navigator.popUntil(context, ModalRoute.withName('/login'));
     } on FirebaseAuthException catch (e, s) {
       captureErrors(context, e, s);
     }

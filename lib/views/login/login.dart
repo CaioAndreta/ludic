@@ -93,10 +93,8 @@ class _LoginPageState extends State<LoginPage> {
                               style: TextStyle(
                                   color: AppColors.primary, fontSize: 16),
                             ),
-                            onTap: () => {
-                              Navigator.of(context)
-                                  .pushNamed('/escolher-registro')
-                            },
+                            onTap: () =>
+                                {Navigator.of(context).pushNamed('/register')},
                           )
                         ],
                       )),

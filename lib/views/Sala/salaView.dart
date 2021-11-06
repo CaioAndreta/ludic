@@ -11,7 +11,6 @@ import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/inputField.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:ludic/views/Sala/telas/listaAlunos.dart';
 import 'package:ludic/views/Sala/telas/listaTarefas.dart';
 import 'package:ludic/views/sala/telas/scoreboard.dart';
 import 'package:ludic/views/sala/telas/tarefasEntreguesAluno.dart';
@@ -66,10 +65,23 @@ class _SalaViewState extends State<SalaView> {
 
     if (sala.isTeacher == true) {
       return DefaultTabController(
-        length: 4,
+        length: 3,
         child: Scaffold(
           backgroundColor: AppColors.secondary,
-          appBar: AppBar(),
+          appBar: AppBar(
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacementNamed('/info-sala', arguments: sala);
+                  },
+                  icon: Icon(Icons.info_outline),
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
           body: TabBarView(children: [
             Scaffold(
               backgroundColor: AppColors.secondaryDark,
@@ -105,7 +117,6 @@ class _SalaViewState extends State<SalaView> {
             ),
             TarefasEnviadasProf(auth: auth, db: db, sala: sala),
             Scoreboard(sala: sala, db: db),
-            ListaAlunos(db: db, sala: sala),
           ]),
           bottomNavigationBar: Material(
             color: AppColors.secondary,
@@ -119,24 +130,33 @@ class _SalaViewState extends State<SalaView> {
               tabs: [
                 Container(
                     height: size.height * 0.1,
-                    child: Center(
-                        child: Text('Tarefas',
-                            style: TextStyles.primaryHintText))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.description_outlined,
+                            color: AppColors.primary),
+                        Text('Tarefas', style: TextStyles.primaryHintText)
+                      ],
+                    )),
                 Container(
                     height: size.height * 0.1,
-                    child: Center(
-                        child: Text('Corrigir tarefas',
-                            style: TextStyles.primaryHintText))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.task_outlined, color: AppColors.primary),
+                        Text('Corrigir Tarefas',
+                            style: TextStyles.primaryHintText)
+                      ],
+                    )),
                 Container(
                     height: size.height * 0.1,
-                    child: Center(
-                        child: Text('Scoreboard',
-                            style: TextStyles.primaryHintText))),
-                Container(
-                    height: size.height * 0.1,
-                    child: Center(
-                        child:
-                            Text('Sala', style: TextStyles.primaryHintText))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.score_outlined, color: AppColors.primary),
+                        Text('Scoreboard', style: TextStyles.primaryHintText)
+                      ],
+                    )),
               ],
             ),
           ),
@@ -144,14 +164,26 @@ class _SalaViewState extends State<SalaView> {
       );
     } else {
       return DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           backgroundColor: AppColors.secondary,
-          appBar: AppBar(),
+          appBar: AppBar(
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacementNamed('/info-sala', arguments: sala);
+                  },
+                  icon: Icon(Icons.info_outline),
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
           body: TabBarView(children: [
             TarefasEntreguesAluno(auth: auth, sala: sala, db: db),
             Scoreboard(sala: sala, db: db),
-            ListaAlunos(db: db, sala: sala),
           ]),
           bottomNavigationBar: Material(
             color: AppColors.secondary,
@@ -165,19 +197,23 @@ class _SalaViewState extends State<SalaView> {
               tabs: [
                 Container(
                     height: size.height * 0.1,
-                    child: Center(
-                        child: Text('Tarefas enviadas',
-                            style: TextStyles.primaryHintText))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.description, color: AppColors.primary),
+                        Text('Tarefas', style: TextStyles.primaryHintText)
+                      ],
+                    )),
                 Container(
                     height: size.height * 0.1,
-                    child: Center(
-                        child: Text('Scoreboard',
-                            style: TextStyles.primaryHintText))),
-                Container(
-                    height: size.height * 0.1,
-                    child: Center(
-                        child:
-                            Text('Sala', style: TextStyles.primaryHintText))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.score_outlined, color: AppColors.primary),
+                        Text('Placar de Pontos',
+                            style: TextStyles.primaryHintText)
+                      ],
+                    ))
               ],
             ),
           ),

@@ -8,7 +8,8 @@ import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 
 class TarefasEntreguesAluno extends StatelessWidget {
-  const TarefasEntreguesAluno({Key? key, required this.auth, required this.sala, required this.db})
+  const TarefasEntreguesAluno(
+      {Key? key, required this.auth, required this.sala, required this.db})
       : super(key: key);
 
   final FirebaseAuth auth;
@@ -22,20 +23,19 @@ class TarefasEntreguesAluno extends StatelessWidget {
       color: AppColors.secondaryDark,
       child: Column(
         children: [
-          Text('Não entregues', style: TextStyles.primaryTitleText),
+          Text('Tarefas Não entregues', style: TextStyles.primaryTitleText),
           StreamBuilder(
               stream: db
                   .collection('salas')
                   .doc(sala.codigo)
                   .collection('tarefas')
-                  .where('entregues.${auth.currentUser!.uid}',
-                      isEqualTo: false)
+                  .where('entregues.${auth.currentUser!.uid}', isEqualTo: false)
                   .snapshots(),
               builder: (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
-                      child: CircularProgressIndicator(
-                          color: AppColors.primary));
+                      child:
+                          CircularProgressIndicator(color: AppColors.primary));
                 }
                 return ListView.builder(
                     shrinkWrap: true,
@@ -54,8 +54,8 @@ class TarefasEntreguesAluno extends StatelessWidget {
                                 descricao: tarDesc,
                                 path: tarPath,
                                 codigoSala: sala.codigo);
-                            Navigator.of(context).pushNamed('/tarefa-aluno',
-                                arguments: tarefa);
+                            Navigator.of(context)
+                                .pushNamed('/tarefa-aluno', arguments: tarefa);
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8),
@@ -81,20 +81,19 @@ class TarefasEntreguesAluno extends StatelessWidget {
                       );
                     });
               }),
-          Text('Entregues', style: TextStyles.primaryTitleText),
+          Text('Tarefas Entregues', style: TextStyles.primaryTitleText),
           StreamBuilder(
               stream: db
                   .collection('salas')
                   .doc(sala.codigo)
                   .collection('tarefas')
-                  .where('entregues.${auth.currentUser!.uid}',
-                      isEqualTo: true)
+                  .where('entregues.${auth.currentUser!.uid}', isEqualTo: true)
                   .snapshots(),
               builder: (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
-                      child: CircularProgressIndicator(
-                          color: AppColors.primary));
+                      child:
+                          CircularProgressIndicator(color: AppColors.primary));
                 }
                 return ListView.builder(
                     shrinkWrap: true,
@@ -113,8 +112,8 @@ class TarefasEntreguesAluno extends StatelessWidget {
                                 descricao: tarDesc,
                                 path: tarPath,
                                 codigoSala: sala.codigo);
-                            Navigator.of(context).pushNamed('/tarefa-aluno',
-                                arguments: tarefa);
+                            Navigator.of(context)
+                                .pushNamed('/tarefa-aluno', arguments: tarefa);
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8),

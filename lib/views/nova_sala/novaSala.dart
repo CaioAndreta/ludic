@@ -105,7 +105,7 @@ class _NovaSalaViewState extends State<NovaSalaView> {
                         'codigo': codigoSala,
                         'teacherName': user.name,
                         'teacherEmail': user.email,
-                        'alunos': []
+                        'alunos': [user.email]
                       });
                       tarefas.forEach((element) {
                         db

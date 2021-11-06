@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:ludic/shared/models/sala_model.dart';
@@ -8,7 +7,6 @@ import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/views/home_page/widgets/HomeDrawer.dart';
 import 'package:ludic/views/home_page/telas/perfil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
@@ -104,11 +102,13 @@ class _HomePageState extends State<HomePage> {
                               child: GestureDetector(
                                 onTap: () {
                                   Sala sala = Sala(
-                                    codigo: doc['codigo'],
-                                    nome: doc['nome'],
-                                    professor: doc['teacherName'],
-                                    isTeacher: widget.user.email == doc['teacherEmail'] ? true : false
-                                  );
+                                      codigo: doc['codigo'],
+                                      nome: doc['nome'],
+                                      professor: doc['teacherName'],
+                                      isTeacher: widget.user.email ==
+                                              doc['teacherEmail']
+                                          ? true
+                                          : false);
                                   Navigator.of(context)
                                       .pushNamed('/sala', arguments: sala);
                                 },

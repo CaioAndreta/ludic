@@ -13,6 +13,7 @@ import 'package:ludic/views/register/escolherRegistro.dart';
 import 'package:ludic/views/login/login.dart';
 import 'package:ludic/views/register/register.dart';
 import 'package:ludic/views/sala/salaView.dart';
+import 'package:ludic/views/sala/telas/infoSala.dart';
 import 'package:ludic/views/splash_screen/splash_screen.dart';
 import 'package:ludic/views/update_usuario/update_usuario_view.dart';
 
@@ -142,7 +143,8 @@ class _AppWidgetState extends State<AppWidget> {
             tarefaAluno:
                 ModalRoute.of(context)!.settings.arguments as TarefaAluno),
         '/update-usuario': (context) => UpdateUsuarioView(
-            user: ModalRoute.of(context)!.settings.arguments as UserModel)
+            user: ModalRoute.of(context)!.settings.arguments as UserModel),
+        '/info-sala': (context) => InfoSala()
       },
     );
   }

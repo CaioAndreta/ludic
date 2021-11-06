@@ -49,6 +49,7 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
     final db = FirebaseFirestore.instance;
     var size = MediaQuery.of(context).size;
     return Scaffold(
@@ -187,68 +188,85 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
                                         label: 'Nota',
                                         icon: Icons.padding,
                                         controller: notaController,
+                                        validator: (nota) {
+                                          if ((nota.isEmpty)) {
+                                            return 'Insira uma nota!';
+                                          } else if ((nota < 0) | (nota > 10)) {
+                                            return 'Insira uma nota de 0 a 10';
+                                          }
+                                          return null;
+                                        },
                                       ),
                                     ],
                                   ),
                                   Button(
                                       label: 'Enviar Tarefa',
                                       onPressed: () {
-                                        db
-                                            .collection('salas')
-                                            .doc(widget
-                                                .tarefaAluno.tarefa.codigoSala)
-                                            .collection('tarefas')
-                                            .doc(widget.tarefaAluno.tarefa.nome)
-                                            .collection('entregues')
-                                            .doc(widget.tarefaAluno.email)
-                                            .update({
-                                          'nota': int.parse(notaController.text)
-                                        });
-                                        if (widget.tarefaAluno.dataConclusao
-                                                .toDate()
-                                                .difference(widget
-                                                    .tarefaAluno.dataEntrega
-                                                    .toDate())
-                                                .inDays >
-                                            0) {
-                                          db
-                                              .collection('usuarios')
-                                              .doc(widget.tarefaAluno.email)
-                                              .update({
-                                            'xp': FieldValue.increment(10 *
-                                                    int.parse(
-                                                        notaController.text) +
-                                                widget.tarefaAluno.dataConclusao
-                                                        .toDate()
-                                                        .difference(widget
-                                                            .tarefaAluno
-                                                            .dataEntrega
-                                                            .toDate())
-                                                        .inDays *
-                                                    5),
-                                          });
+                                        final form = _formKey.currentState!;
+                                        if (form.validate()) {
                                           db
                                               .collection('salas')
                                               .doc(widget.tarefaAluno.tarefa
                                                   .codigoSala)
-                                              .collection('leaderboard')
+                                              .collection('tarefas')
+                                              .doc(widget
+                                                  .tarefaAluno.tarefa.nome)
+                                              .collection('entregues')
                                               .doc(widget.tarefaAluno.email)
                                               .update({
-                                            'pontos': FieldValue.increment(100 *
-                                                    int.parse(
-                                                        notaController.text) +
-                                                widget.tarefaAluno.dataConclusao
-                                                        .toDate()
-                                                        .difference(widget
-                                                            .tarefaAluno
-                                                            .dataEntrega
-                                                            .toDate())
-                                                        .inDays *
-                                                    50)
+                                            'nota':
+                                                int.parse(notaController.text)
                                           });
+                                          if (widget.tarefaAluno.dataConclusao
+                                                  .toDate()
+                                                  .difference(widget
+                                                      .tarefaAluno.dataEntrega
+                                                      .toDate())
+                                                  .inDays >
+                                              0) {
+                                            db
+                                                .collection('usuarios')
+                                                .doc(widget.tarefaAluno.email)
+                                                .update({
+                                              'xp': FieldValue.increment(10 *
+                                                      int.parse(
+                                                          notaController.text) +
+                                                  widget.tarefaAluno
+                                                          .dataConclusao
+                                                          .toDate()
+                                                          .difference(widget
+                                                              .tarefaAluno
+                                                              .dataEntrega
+                                                              .toDate())
+                                                          .inDays *
+                                                      5),
+                                            });
+                                            db
+                                                .collection('salas')
+                                                .doc(widget.tarefaAluno.tarefa
+                                                    .codigoSala)
+                                                .collection('leaderboard')
+                                                .doc(widget.tarefaAluno.email)
+                                                .update({
+                                              'pontos': FieldValue.increment(
+                                                  100 *
+                                                          int.parse(
+                                                              notaController
+                                                                  .text) +
+                                                      widget.tarefaAluno
+                                                              .dataConclusao
+                                                              .toDate()
+                                                              .difference(widget
+                                                                  .tarefaAluno
+                                                                  .dataEntrega
+                                                                  .toDate())
+                                                              .inDays *
+                                                          50)
+                                            });
+                                          }
+                                          Navigator.popUntil(context,
+                                              ModalRoute.withName('/sala'));
                                         }
-                                        Navigator.popUntil(context,
-                                            ModalRoute.withName('/sala'));
                                       })
                                 ],
                               ),

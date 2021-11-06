@@ -49,7 +49,7 @@ class TarefaDetalhes extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 8),
                     margin: EdgeInsets.only(bottom: 10),
                     child: Text('${widget.tarefa.descricao}',
-                        style: TextStyles.blackHintText)),
+                        style: TextStyles.blackBoldTitleText)),
                 Text(
                   'Arquivos:',
                   style: TextStyles.blackHintText,

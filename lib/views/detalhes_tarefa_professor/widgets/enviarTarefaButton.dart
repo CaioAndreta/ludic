@@ -118,10 +118,6 @@ class EnviarTarefaButton extends StatelessWidget {
                                     child: Text('Enviar a tarefa',
                                         style: TextStyles.blackTitleText),
                                   ),
-                                  InputField(
-                                    label: 'Peso',
-                                    icon: Icons.padding,
-                                  ),
                                   Column(
                                     children: [
                                       Text('Data de Envio:',

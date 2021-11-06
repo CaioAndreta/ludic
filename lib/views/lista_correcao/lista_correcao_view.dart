@@ -4,6 +4,7 @@ import 'package:ludic/shared/models/tarefa_aluno_model.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
+import 'package:ludic/shared/themes/app_textstyles.dart';
 
 class ListaCorrecao extends StatefulWidget {
   const ListaCorrecao({Key? key, required this.tarefa}) : super(key: key);
@@ -33,6 +34,15 @@ class _ListaCorrecaoState extends State<ListaCorrecao> {
           if (!snapshot.hasData) {
             return Center(
                 child: CircularProgressIndicator(color: AppColors.primary));
+          }
+          if (snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Text('Nenhum aluno entregou a tarefa ainda :(',
+                    style: TextStyles.blackHintText),
+              ),
+            );
           }
           return ListView.builder(
               itemCount: snapshot.data!.docs.length,

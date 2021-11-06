@@ -27,6 +27,7 @@ class _ListaTarefasState extends State<ListaTarefas> {
             .collection('salas')
             .doc(widget.sala.codigo)
             .collection('tarefas')
+            .where('enviada', isEqualTo: false)
             .snapshots(),
         builder: (_, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
           deleteTarefa(tarNome) {

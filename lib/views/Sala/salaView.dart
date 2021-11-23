@@ -44,6 +44,7 @@ class _SalaViewState extends State<SalaView> {
             .set({
           'nome': element['nome'],
           'descricao': element['descricao'],
+          'enviada': false
         });
         setState(() {});
       });
@@ -74,7 +75,8 @@ class _SalaViewState extends State<SalaView> {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/info-sala', arguments: sala);
+                    Navigator.of(context)
+                        .pushReplacementNamed('/info-sala', arguments: sala);
                   },
                   icon: Icon(Icons.info_outline),
                   color: AppColors.primary,
@@ -173,7 +175,8 @@ class _SalaViewState extends State<SalaView> {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/info-sala', arguments: sala);
+                    Navigator.of(context)
+                        .pushReplacementNamed('/info-sala', arguments: sala);
                   },
                   icon: Icon(Icons.info_outline),
                   color: AppColors.primary,

@@ -115,7 +115,8 @@ class _NovaSalaViewState extends State<NovaSalaView> {
                             .doc(element['nome'])
                             .set({
                           'nome': element['nome'],
-                          'descricao': element['descricao']
+                          'descricao': element['descricao'],
+                          'enviada': false
                         });
                         if (mapIndex < tarefas.length) {
                           mapIndex += 1;

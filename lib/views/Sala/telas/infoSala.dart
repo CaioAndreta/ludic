@@ -15,6 +15,7 @@ class InfoSala extends StatelessWidget {
     final db = FirebaseFirestore.instance;
 
     return Scaffold(
+      backgroundColor: AppColors.secondary,
       appBar: AppBar(),
       body: StreamBuilder<QuerySnapshot>(
           stream: db
@@ -46,7 +47,14 @@ class InfoSala extends StatelessWidget {
                     itemBuilder: (_, index) {
                       var doc = snapshot.data!.docs[index];
                       if (doc['email'] != sala.auth.currentUser!.email)
-                        return ListTile(title: Text(doc['nome']));
+                        return GestureDetector(
+                          child:
+                              Card(child: ListTile(title: Text(doc['nome']))),
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/perfil-user',
+                                arguments: doc['email']);
+                          },
+                        );
                       else
                         return Container();
                     }),

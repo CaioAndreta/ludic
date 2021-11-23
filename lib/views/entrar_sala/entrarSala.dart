@@ -4,6 +4,8 @@ import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 
+import '../../shared/themes/app_textstyles.dart';
+
 class EntrarSalaView extends StatefulWidget {
   const EntrarSalaView({Key? key}) : super(key: key);
 

@@ -8,6 +8,7 @@ import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/views/corrigir_tarefa/corrigir_tarefa_view.dart';
 import 'package:ludic/views/detalhes_tarefa_aluno/tarefa_aluno_view.dart';
 import 'package:ludic/views/home_page/homePage.dart';
+import 'package:ludic/views/info_user/infoUser.dart';
 import 'package:ludic/views/lista_correcao/lista_correcao_view.dart';
 import 'package:ludic/views/register/escolherRegistro.dart';
 import 'package:ludic/views/login/login.dart';
@@ -144,7 +145,8 @@ class _AppWidgetState extends State<AppWidget> {
                 ModalRoute.of(context)!.settings.arguments as TarefaAluno),
         '/update-usuario': (context) => UpdateUsuarioView(
             user: ModalRoute.of(context)!.settings.arguments as UserModel),
-        '/info-sala': (context) => InfoSala()
+        '/info-sala': (context) => InfoSala(),
+        '/perfil-user': (context) => InfoUser(userMail: ModalRoute.of(context)!.settings.arguments as String)
       },
     );
   }

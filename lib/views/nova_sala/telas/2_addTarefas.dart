@@ -131,12 +131,6 @@ class _AddTarefasViewState extends State<AddTarefasView> {
                             itemBuilder: (_) => [
                               PopupMenuItem(
                                   child: ListTile(
-                                      leading: Icon(Icons.edit,
-                                          color: AppColors.primary),
-                                      title: Text('Editar',
-                                          style: TextStyles.primaryHintText))),
-                              PopupMenuItem(
-                                  child: ListTile(
                                       onTap: () {
                                         deleteTarefa(index);
                                         Navigator.pop(context);

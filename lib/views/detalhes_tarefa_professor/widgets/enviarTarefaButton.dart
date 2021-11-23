@@ -191,7 +191,8 @@ class EnviarTarefaButton extends StatelessWidget {
                                                   .update({
                                                 'data de conclusao':
                                                     selectedDate.toLocal(),
-                                                'entregues': alunosId
+                                                'entregues': alunosId,
+                                                'enviada': true
                                               }));
 
                                     Navigator.popUntil(

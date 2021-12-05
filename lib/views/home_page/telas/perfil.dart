@@ -46,7 +46,7 @@ class Perfil extends StatelessWidget {
                             child: CircleAvatar(
                               radius: 30.0,
                               backgroundImage: AssetImage('assets/profile.png'),
-                              backgroundColor: Color(0xFFebe6d6),
+                              backgroundColor: Colors.white,
                             ),
                             width: double.infinity,
                           ),

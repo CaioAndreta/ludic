@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/firebaseFile.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
+import 'package:ludic/shared/models/tarefa_professor_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
@@ -15,7 +16,7 @@ import 'package:path/path.dart';
 
 class TarefaAlunoView extends StatefulWidget {
   TarefaAlunoView({Key? key, required this.tarefa}) : super(key: key);
-  final Tarefa tarefa;
+  final Tarefa_entregue tarefa;
 
   @override
   State<TarefaAlunoView> createState() => _TarefaAlunoState();
@@ -188,6 +189,19 @@ class _TarefaAlunoState extends State<TarefaAlunoView> {
                       .collection('tarefas')
                       .doc(widget.tarefa.nome)
                       .update({'entregues.${auth.currentUser!.uid}': true});
+                  db
+                      .collection('salas')
+                      .doc(widget.tarefa.codigoSala)
+                      .collection('tarefas')
+                      .doc(widget.tarefa.nome)
+                      .collection('entregues')
+                      .doc(auth.currentUser!.email)
+                      .set({
+                    'aluno': auth.currentUser!.displayName,
+                    'data de conclusao': widget.tarefa.dataEntrega,
+                    'data de entrega': DateTime.now(),
+                    'email': auth.currentUser!.email
+                  });
                   Navigator.pop(context);
                 }),
           ),

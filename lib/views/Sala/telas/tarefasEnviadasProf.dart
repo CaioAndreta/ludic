@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ludic/shared/models/sala_model.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
+import 'package:ludic/shared/models/tarefa_professor_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 
@@ -47,8 +48,8 @@ class TarefasEnviadasProf extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             String tarNome = doc['nome'];
-                            Tarefa tarefa = Tarefa(
-                                nome: tarNome, codigoSala: sala.codigo);
+                            Tarefa_entregue tarefa = Tarefa_entregue(
+                                nome: tarNome, codigoSala: sala.codigo, dataEntrega: doc['data de conclusao']);
                             Navigator.of(context).pushNamed('/lista-correcao',
                                 arguments: tarefa);
                           },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ludic/shared/models/firebaseFile.dart';
 import 'package:ludic/shared/models/tarefa_aluno_model.dart';
@@ -20,6 +21,7 @@ class CorrigirTarefa extends StatefulWidget {
 }
 
 class _CorrigirTarefaState extends State<CorrigirTarefa> {
+  final _formKey = GlobalKey<FormState>();
   var storage = FirebaseStorage.instance;
   late Future<List<FirebaseFile>> futureFiles;
   Future<List<String>> _getDownloadLinks(List<Reference> refs) =>
@@ -49,7 +51,6 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
     final db = FirebaseFirestore.instance;
     var size = MediaQuery.of(context).size;
     return Scaffold(
@@ -166,109 +167,114 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
                       builder: (context) => StatefulBuilder(builder:
                               (BuildContext context,
                                   StateSetter setModalState) {
-                            return Container(
-                              height: size.height * 0.5,
-                              decoration: BoxDecoration(
-                                  color: AppColors.secondaryDark,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(25.0),
-                                      topRight: Radius.circular(25.0))),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(20.0),
-                                        child: Text('Nota do aluno',
-                                            style: TextStyles.blackTitleText),
-                                      ),
-                                      InputField(
-                                        label: 'Nota',
-                                        icon: Icons.padding,
-                                        controller: notaController,
-                                        validator: (nota) {
-                                          if ((nota.isEmpty)) {
-                                            return 'Insira uma nota!';
-                                          } else if ((nota < 0) | (nota > 10)) {
-                                            return 'Insira uma nota de 0 a 10';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  Button(
-                                      label: 'Enviar Tarefa',
-                                      onPressed: () {
-                                        final form = _formKey.currentState!;
-                                        if (form.validate()) {
-                                          db
-                                              .collection('salas')
-                                              .doc(widget.tarefaAluno.tarefa
-                                                  .codigoSala)
-                                              .collection('tarefas')
-                                              .doc(widget
-                                                  .tarefaAluno.tarefa.nome)
-                                              .collection('entregues')
-                                              .doc(widget.tarefaAluno.email)
-                                              .update({
-                                            'nota':
-                                                int.parse(notaController.text)
-                                          });
-                                          if (widget.tarefaAluno.dataConclusao
-                                                  .toDate()
-                                                  .difference(widget
-                                                      .tarefaAluno.dataEntrega
-                                                      .toDate())
-                                                  .inDays >
-                                              0) {
-                                            db
-                                                .collection('usuarios')
-                                                .doc(widget.tarefaAluno.email)
-                                                .update({
-                                              'xp': FieldValue.increment(10 *
-                                                      int.parse(
-                                                          notaController.text) +
-                                                  widget.tarefaAluno
-                                                          .dataConclusao
-                                                          .toDate()
-                                                          .difference(widget
-                                                              .tarefaAluno
-                                                              .dataEntrega
-                                                              .toDate())
-                                                          .inDays *
-                                                      5),
-                                            });
+                            return Form(
+                              key: _formKey,
+                              child: Container(
+                                height: size.height * 0.5,
+                                decoration: BoxDecoration(
+                                    color: AppColors.secondaryDark,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(25.0),
+                                        topRight: Radius.circular(25.0))),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(20.0),
+                                          child: Text('Nota do aluno',
+                                              style: TextStyles.blackTitleText),
+                                        ),
+                                        InputField(
+                                          keyboardType: TextInputType.number,
+                                          label: 'Nota',
+                                          icon: Icons.padding,
+                                          controller: notaController,
+                                          validator: (nota) {
+                                            if ((nota.toString().isEmpty)) {
+                                              return 'Insira uma nota!';
+                                            } else if ((int.parse(nota) < 0) |
+                                                (int.parse(nota) > 10)) {
+                                              return 'Insira uma nota de 0 a 10';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Button(
+                                        label: 'Enviar Correção',
+                                        onPressed: () {
+                                          final form = _formKey.currentState!;
+                                          if (form.validate()) {
                                             db
                                                 .collection('salas')
                                                 .doc(widget.tarefaAluno.tarefa
                                                     .codigoSala)
-                                                .collection('leaderboard')
+                                                .collection('tarefas')
+                                                .doc(widget
+                                                    .tarefaAluno.tarefa.nome)
+                                                .collection('entregues')
                                                 .doc(widget.tarefaAluno.email)
                                                 .update({
-                                              'pontos': FieldValue.increment(
-                                                  100 *
-                                                          int.parse(
-                                                              notaController
-                                                                  .text) +
-                                                      widget.tarefaAluno
-                                                              .dataConclusao
-                                                              .toDate()
-                                                              .difference(widget
-                                                                  .tarefaAluno
-                                                                  .dataEntrega
-                                                                  .toDate())
-                                                              .inDays *
-                                                          50)
+                                              'nota':
+                                                  int.parse(notaController.text)
                                             });
+                                            if (widget.tarefaAluno.dataConclusao
+                                                    .toDate()
+                                                    .difference(widget
+                                                        .tarefaAluno.dataEntrega
+                                                        .toDate())
+                                                    .inDays >=
+                                                0) {
+                                              db
+                                                  .collection('usuarios')
+                                                  .doc(widget.tarefaAluno.email)
+                                                  .update({
+                                                'xp': FieldValue.increment(10 *
+                                                        int.parse(notaController
+                                                            .text) +
+                                                    widget.tarefaAluno
+                                                            .dataConclusao
+                                                            .toDate()
+                                                            .difference(widget
+                                                                .tarefaAluno
+                                                                .dataEntrega
+                                                                .toDate())
+                                                            .inDays *
+                                                        5),
+                                              });
+                                              db
+                                                  .collection('salas')
+                                                  .doc(widget.tarefaAluno.tarefa
+                                                      .codigoSala)
+                                                  .collection('leaderboard')
+                                                  .doc(widget.tarefaAluno.email)
+                                                  .update({
+                                                'pontos': FieldValue.increment(
+                                                    100 *
+                                                            int.parse(
+                                                                notaController
+                                                                    .text) +
+                                                        widget.tarefaAluno
+                                                                .dataConclusao
+                                                                .toDate()
+                                                                .difference(widget
+                                                                    .tarefaAluno
+                                                                    .dataEntrega
+                                                                    .toDate())
+                                                                .inDays *
+                                                            50)
+                                              });
+                                            }
+                                            Navigator.popUntil(context,
+                                                ModalRoute.withName('/sala'));
                                           }
-                                          Navigator.popUntil(context,
-                                              ModalRoute.withName('/sala'));
-                                        }
-                                      })
-                                ],
+                                        })
+                                  ],
+                                ),
                               ),
                             );
                           }));

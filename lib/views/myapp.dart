@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ludic/shared/models/tarefa_aluno_model.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
+import 'package:ludic/shared/models/tarefa_professor_model.dart';
 import 'package:ludic/shared/models/user_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/views/corrigir_tarefa/corrigir_tarefa_view.dart';
@@ -137,9 +138,9 @@ class _AppWidgetState extends State<AppWidget> {
         '/tarefa-professor': (context) => TarefaProfessor(
             tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
         '/tarefa-aluno': (context) => TarefaAlunoView(
-            tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
+            tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa_entregue),
         '/lista-correcao': (context) => ListaCorrecao(
-            tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa),
+            tarefa: ModalRoute.of(context)!.settings.arguments as Tarefa_entregue),
         '/corrigir-tarefa': (context) => CorrigirTarefa(
             tarefaAluno:
                 ModalRoute.of(context)!.settings.arguments as TarefaAluno),

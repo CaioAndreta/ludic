@@ -11,6 +11,8 @@ class InputField extends StatefulWidget {
   Widget? suffixIcon;
   IconData? icon;
   String? initialValue;
+  TextInputType? keyboardType;
+
   var validator;
   InputField(
       {Key? key,
@@ -20,7 +22,7 @@ class InputField extends StatefulWidget {
       this.obscureText = false,
       this.controller,
       this.initialValue,
-      this.validator})
+      this.validator, this.keyboardType})
       : super(key: key);
 
   @override
@@ -35,6 +37,7 @@ class _InputFieldState extends State<InputField> {
       margin: EdgeInsets.symmetric(vertical: 10),
       width: size.width * 0.8,
       child: TextFormField(
+        keyboardType: widget.keyboardType,
         initialValue: widget.initialValue,
         enableInteractiveSelection: true,
         controller: widget.controller,

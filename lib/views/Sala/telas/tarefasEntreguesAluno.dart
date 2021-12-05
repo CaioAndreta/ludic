@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ludic/shared/models/sala_model.dart';
 import 'package:ludic/shared/models/tarefa_model.dart';
+import 'package:ludic/shared/models/tarefa_professor_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 
@@ -49,11 +50,13 @@ class TarefasEntreguesAluno extends StatelessWidget {
                             String tarNome = doc['nome'];
                             String tarDesc = doc['descricao'];
                             String tarPath = '${sala.codigo}/$tarNome';
-                            Tarefa tarefa = Tarefa(
+                            Timestamp dataConclusao = doc['data de conclusao'];
+                            Tarefa_entregue tarefa = Tarefa_entregue(
                                 nome: tarNome,
                                 descricao: tarDesc,
                                 path: tarPath,
-                                codigoSala: sala.codigo);
+                                codigoSala: sala.codigo,
+                                dataEntrega: dataConclusao);
                             Navigator.of(context)
                                 .pushNamed('/tarefa-aluno', arguments: tarefa);
                           },
@@ -107,11 +110,13 @@ class TarefasEntreguesAluno extends StatelessWidget {
                             String tarNome = doc['nome'];
                             String tarDesc = doc['descricao'];
                             String tarPath = '${sala.codigo}/$tarNome';
-                            Tarefa tarefa = Tarefa(
+                            Timestamp dataConclusao = doc['data de conclusao'];
+                            Tarefa_entregue tarefa = Tarefa_entregue(
                                 nome: tarNome,
                                 descricao: tarDesc,
                                 path: tarPath,
-                                codigoSala: sala.codigo);
+                                codigoSala: sala.codigo,
+                                dataEntrega: dataConclusao);
                             Navigator.of(context)
                                 .pushNamed('/tarefa-aluno', arguments: tarefa);
                           },

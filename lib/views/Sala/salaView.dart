@@ -306,16 +306,6 @@ class _SalaViewState extends State<SalaView> {
                             icon: Icons.text_snippet,
                             controller: _descController,
                           ),
-                          Column(
-                            children: [
-                              Button(
-                                label: 'Selecione o Arquivo',
-                                onPressed: selectFile,
-                              ),
-                              Text('$fileName',
-                                  style: TextStyles.blackHintText),
-                            ],
-                          )
                         ],
                       ),
                     ),
@@ -325,7 +315,6 @@ class _SalaViewState extends State<SalaView> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           addTarefa(_nameController.text, _descController.text);
-                          await uploadFile();
                           Navigator.pop(context);
                         }
                       },

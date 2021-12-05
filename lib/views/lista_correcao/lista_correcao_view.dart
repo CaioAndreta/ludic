@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ludic/shared/models/tarefa_aluno_model.dart';
-import 'package:ludic/shared/models/tarefa_model.dart';
-import 'package:ludic/shared/models/user_model.dart';
+import 'package:ludic/shared/models/tarefa_professor_model.dart';
 import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 
 class ListaCorrecao extends StatefulWidget {
   const ListaCorrecao({Key? key, required this.tarefa}) : super(key: key);
 
-  final Tarefa tarefa;
+  final Tarefa_entregue tarefa;
 
   @override
   State<ListaCorrecao> createState() => _ListaCorrecaoState();
@@ -65,7 +64,7 @@ class _ListaCorrecaoState extends State<ListaCorrecao> {
                   },
                   child: Card(
                     child: ListTile(
-                      title: Text(doc['aluno']),
+                      title: Text(doc['aluno'], style: TextStyles.cardTitle),
                     ),
                   ),
                 );

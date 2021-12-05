@@ -46,7 +46,8 @@ class _CorrigirTarefaState extends State<CorrigirTarefa> {
 
   void initState() {
     super.initState();
-    futureFiles = listAll('${widget.tarefaAluno.tarefa.path}');
+    futureFiles = listAll(
+        '${widget.tarefaAluno.tarefa.codigoSala}/${widget.tarefaAluno.tarefa.nome}/alunos/${widget.tarefaAluno.email}');
   }
 
   @override

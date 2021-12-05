@@ -149,7 +149,7 @@ class _EntrarSalaViewState extends State<EntrarSalaView> {
                                             .doc(doc.id)
                                             .collection('leaderboard')
                                             .doc(user.email)
-                                            .update({
+                                            .set({
                                           'pontos': 0,
                                           'nome': user.name
                                         });

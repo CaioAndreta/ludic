@@ -46,17 +46,13 @@ class InfoSala extends StatelessWidget {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (_, index) {
                       var doc = snapshot.data!.docs[index];
-                      if (doc['email'] != sala.auth.currentUser!.email)
-                        return GestureDetector(
-                          child:
-                              Card(child: ListTile(title: Text(doc['nome']))),
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/perfil-user',
-                                arguments: doc['email']);
-                          },
-                        );
-                      else
-                        return Container();
+                      return GestureDetector(
+                        child: Card(child: ListTile(title: Text(doc['nome']))),
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/perfil-user',
+                              arguments: doc['email']);
+                        },
+                      );
                     }),
               ],
             );

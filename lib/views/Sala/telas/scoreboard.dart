@@ -5,7 +5,8 @@ import 'package:ludic/shared/models/sala_model.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 
 class Scoreboard extends StatelessWidget {
-  const Scoreboard({Key? key, required this.db, required this.sala}) : super(key: key);
+  const Scoreboard({Key? key, required this.db, required this.sala})
+      : super(key: key);
   final Sala sala;
   final FirebaseFirestore db;
 
@@ -16,7 +17,7 @@ class Scoreboard extends StatelessWidget {
             .collection('salas')
             .doc(sala.codigo)
             .collection('leaderboard')
-            .orderBy('pontos')
+            .orderBy('pontos', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -27,7 +28,7 @@ class Scoreboard extends StatelessWidget {
             children: [
               Center(
                   child:
-                      Text('Scoreboard', style: TextStyles.primaryTitleText)),
+                      Text('Placar de pontos', style: TextStyles.primaryTitleText)),
               ListView.builder(
                   shrinkWrap: true,
                   itemCount: snapshot.data!.docs.length,

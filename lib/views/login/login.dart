@@ -6,6 +6,7 @@ import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/inputField.dart';
+import 'package:ludic/shared/widgets/passwordInput.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -48,11 +49,10 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
-                InputField(
+                InputPassword(
                   icon: Icons.lock,
                   label: 'Senha',
                   controller: _passwordController,
-                  obscureText: true,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Insira uma senha';

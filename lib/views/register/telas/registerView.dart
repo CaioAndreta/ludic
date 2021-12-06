@@ -2,10 +2,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ludic/shared/auth/auth_controller.dart';
-import 'package:ludic/shared/themes/app_colors.dart';
 import 'package:ludic/shared/themes/app_textstyles.dart';
 import 'package:ludic/shared/widgets/button.dart';
 import 'package:ludic/shared/widgets/inputField.dart';
+import 'package:ludic/shared/widgets/passwordInput.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -59,17 +59,10 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              InputField(
+              InputPassword(
                 label: 'Senha',
                 icon: Icons.lock,
-                suffixIcon: Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: IconButton(
-                      icon: Icon(Icons.visibility, color: AppColors.primary),
-                      onPressed: () {}),
-                ),
                 controller: _passwordController,
-                obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Insira uma senha';
